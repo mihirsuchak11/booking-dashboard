@@ -1,0 +1,559 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Plus, Trash2, ArrowRight, Loader2, Save, MapPin, Globe, Mail, Phone, Clock, DollarSign, Check, ChevronRight, ChevronLeft, Edit2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+import { saveKnowledgeBase, submitOnboardingAction } from "../actions";
+
+// Types matching our schema
+interface FAQ {
+    id: string;
+    question: string;
+    answer: string;
+    source?: string;
+    askDuringCall?: boolean;
+}
+
+interface Service {
+    name: string;
+    duration?: number;
+    price?: number;
+    description: string;
+}
+
+interface BusinessInfo {
+    description: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    website?: string;
+    category?: string;
+    name?: string;
+}
+
+interface WorkingHours {
+    [key: string]: { isOpen: boolean; open: string; close: string };
+}
+
+interface FullProfile {
+    businessInfo: BusinessInfo;
+    hours: WorkingHours;
+    services: Service[];
+    faqs: FAQ[];
+}
+
+const STEPS = [
+    { id: "intro", title: "Welcome" },
+    { id: "info", title: "Business Info" },
+    { id: "hours", title: "Business Hours" },
+    { id: "services", title: "Services" },
+    { id: "faqs", title: "FAQs" },
+    { id: "finish", title: "Finish" }
+];
+
+export default function ReviewProfilePage() {
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [isHoursEditing, setIsHoursEditing] = useState(false);
+
+    // Initial empty state
+    const [data, setData] = useState<FullProfile>({
+        businessInfo: { description: "" },
+        hours: {},
+        services: [],
+        faqs: []
+    });
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            // Try to load full profile
+            const storedProfile = sessionStorage.getItem("onboarding_generated_full_profile");
+            console.log("[Onboarding] SessionStorage raw:", storedProfile);
+
+            if (storedProfile) {
+                try {
+                    const parsed = JSON.parse(storedProfile);
+                    console.log("[Onboarding] Loaded profile from session:", parsed);
+                    setData(parsed);
+                } catch (e) {
+                    console.error("Failed to parse profile", e);
+                }
+            } else {
+                console.warn("[Onboarding] No profile found in sessionStorage!");
+            }
+        }
+    }, []);
+
+    const updateBusinessInfo = (field: keyof BusinessInfo, value: string) => {
+        setData(prev => ({ ...prev, businessInfo: { ...prev.businessInfo, [field]: value } }));
+    };
+
+    const updateService = (index: number, field: keyof Service, value: string | number | undefined) => {
+        const newServices = [...data.services];
+        // @ts-ignore
+        newServices[index] = { ...newServices[index], [field]: value };
+        setData(prev => ({ ...prev, services: newServices }));
+    };
+
+    const addService = () => {
+        setData(prev => ({
+            ...prev,
+            services: [...prev.services, { name: "", description: "" }]
+        }));
+    };
+
+    const removeService = (index: number) => {
+        setData(prev => ({
+            ...prev,
+            services: prev.services.filter((_, i) => i !== index)
+        }));
+    };
+
+    const updateFAQ = (index: number, field: keyof FAQ, value: any) => {
+        const newFAQs = [...data.faqs];
+        newFAQs[index] = { ...newFAQs[index], [field]: value };
+        setData(prev => ({ ...prev, faqs: newFAQs }));
+    };
+
+    const addFAQ = () => {
+        setData(prev => ({
+            ...prev,
+            faqs: [...prev.faqs, { id: Math.random().toString(), question: "", answer: "" }]
+        }));
+    };
+
+    const removeFAQ = (index: number) => {
+        setData(prev => ({
+            ...prev,
+            faqs: prev.faqs.filter((_, i) => i !== index)
+        }));
+    };
+
+    const dayOrder = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+    const updateHours = (day: string, field: "isOpen" | "open" | "close", value: any) => {
+        setData(prev => ({
+            ...prev,
+            hours: {
+                ...prev.hours,
+                [day]: { ...prev.hours[day], [field]: value }
+            }
+        }));
+    };
+
+    const handleNext = () => {
+        if (currentStep < STEPS.length - 1) {
+            setCurrentStep(prev => prev + 1);
+        } else {
+            handleSubmit();
+        }
+    };
+
+    const handleBack = () => {
+        if (currentStep > 0) {
+            setCurrentStep(prev => prev - 1);
+        }
+    };
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        try {
+            console.log("[Onboarding] Current data state:", data);
+
+            const onboardingPayload = {
+                name: data.businessInfo.name || "My Business",
+                address: data.businessInfo.address,
+                description: data.businessInfo.description,
+                email: data.businessInfo.email,
+                website: data.businessInfo.website,
+                phone: data.businessInfo.phone,
+                businessType: data.businessInfo.category,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                workingHours: mapHoursToPayload(data.hours),
+                services: data.services.map((s, i) => ({
+                    ...s,
+                    id: `svc_${i}`,
+                    duration: s.duration || 30,
+                    price: s.price || 0
+                })),
+                faqs: data.faqs
+                    .filter(f => !f.askDuringCall)
+                    .map(f => ({ question: f.question, answer: f.answer }))
+            };
+
+            const dbResult = await submitOnboardingAction(onboardingPayload);
+            if (!dbResult.success) throw new Error(dbResult.error);
+
+            toast.success("Setup complete!");
+            // Move to "Finish" step to show success message
+            setCurrentStep(STEPS.length - 1);
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error.message || "Failed to save profile.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const mapHoursToPayload = (uiHours: WorkingHours) => {
+        const payload: any = {};
+        Object.entries(uiHours).forEach(([day, schedule]) => {
+            payload[day] = {
+                isOpen: schedule.isOpen,
+                openTime: schedule.open,
+                closeTime: schedule.close
+            };
+        });
+        return payload;
+    };
+
+    const totalSteps = STEPS.length + 1; // +1 for the search step
+    const currentGlobalStep = currentStep + 2; // +1 for 1-based, +1 for search step
+    const progressValue = (currentGlobalStep / totalSteps) * 100;
+
+    // Render Steps
+    const renderStepContent = () => {
+        switch (STEPS[currentStep].id) {
+            case "intro":
+                return (
+                    <div className="text-center space-y-8 py-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 shadow-sm border border-primary/20">
+                            <Check className="w-10 h-10 text-primary" />
+                        </div>
+                        <h1 className="text-4xl font-bold tracking-tight">We've prefilled your profile</h1>
+                        <p className="text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                            We found your business on Google and your website. Just verify the details and we're good to go.
+                        </p>
+                    </div>
+                );
+
+            case "info":
+                return (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                        <div className="space-y-2 border-b pb-4">
+                            <h2 className="text-2xl font-semibold tracking-tight">Business Information</h2>
+                            <p className="text-base text-muted-foreground">Review the details we found from your online presence.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-3">
+                                <Label className="text-base">Business Name</Label>
+                                <div className="relative">
+                                    <Input value={data.businessInfo.name || ""} disabled className="bg-muted/30 border-muted h-12 text-lg" />
+                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
+                                        <MapPin className="w-3 h-3" /> Google
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-base">Category</Label>
+                                <div className="relative">
+                                    <Input value={data.businessInfo.category || ""} disabled className="bg-muted/30 border-muted h-12 text-lg" />
+                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
+                                        <Globe className="w-3 h-3" /> Google
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-base">Phone</Label>
+                                <div className="relative">
+                                    <Input value={data.businessInfo.phone || ""} onChange={e => updateBusinessInfo("phone", e.target.value)} className="h-12 text-lg" />
+                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
+                                        <Phone className="w-3 h-3" /> Google
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-base">Address</Label>
+                                <div className="relative">
+                                    <Input value={data.businessInfo.address || ""} onChange={e => updateBusinessInfo("address", e.target.value)} className="h-12 text-lg" />
+                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
+                                        <MapPin className="w-3 h-3" /> Google
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-base">Website</Label>
+                                <div className="relative">
+                                    <Input value={data.businessInfo.website || ""} onChange={e => updateBusinessInfo("website", e.target.value)} className="h-12 text-lg" />
+                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
+                                        <Globe className="w-3 h-3" /> Google
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-base">Email</Label>
+                                <div className="relative">
+                                    <Input value={data.businessInfo.email || ""} onChange={e => updateBusinessInfo("email", e.target.value)} className="h-12 text-lg" />
+                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-50 text-xs font-medium text-orange-600 border border-orange-100 shadow-sm">
+                                        <Mail className="w-3 h-3" /> Website
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-1 md:col-span-2 space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <Label className="text-base">Description</Label>
+                                    <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full border border-purple-100 flex items-center gap-1">
+                                        ✨ AI-Generated
+                                    </span>
+                                </div>
+                                <Textarea className="min-h-[120px] text-lg leading-relaxed p-4" value={data.businessInfo.description || ""} onChange={e => updateBusinessInfo("description", e.target.value)} />
+                            </div>
+                        </div>
+                    </div>
+                );
+
+            case "hours":
+                return (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                        <div className="space-y-2 border-b pb-4">
+                            <h2 className="text-2xl font-semibold tracking-tight">Business Hours</h2>
+                            <p className="text-base text-muted-foreground">When are you open for customers?</p>
+                        </div>
+
+                        {!isHoursEditing ? (
+                            <div className="border border-muted/40 rounded-3xl p-12 flex flex-col items-center justify-center space-y-8 text-center bg-muted/5 shadow-inner">
+                                <h3 className="text-xl font-medium tracking-tight">Are these your business hours?</h3>
+
+                                <div className="px-10 py-6 bg-white dark:bg-card border rounded-2xl shadow-sm">
+                                    <span className="text-4xl font-bold tracking-tight text-foreground">
+                                        Mon–Sat · {data.hours["monday"]?.open || "09:00"} – {data.hours["monday"]?.close || "17:00"}
+                                    </span>
+                                </div>
+
+                                <p className="text-base text-muted-foreground max-w-sm">
+                                    We'll use this detailed schedule for booking appointments.
+                                </p>
+
+                                <div className="flex gap-4 pt-4">
+                                    <Button variant="outline" size="lg" className="min-w-[140px] h-12 text-base" onClick={() => setIsHoursEditing(true)}>
+                                        <Edit2 className="w-4 h-4 mr-2" />
+                                        Edit Hours
+                                    </Button>
+                                    <Button onClick={handleNext} size="lg" className="min-w-[160px] h-12 text-base bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black shadow-md hover:shadow-lg transition-all">
+                                        <Check className="w-5 h-5 mr-2" />
+                                        Yes, Correct
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-4 max-w-3xl mx-auto">
+                                <div className="bg-card border rounded-xl overflow-hidden shadow-sm">
+                                    {dayOrder.map((day, index) => {
+                                        const dayData = data.hours[day] || { isOpen: false, open: "09:00", close: "17:00" };
+                                        return (
+                                            <div key={day} className={`flex items-center justify-between p-4 ${index !== dayOrder.length - 1 ? 'border-b' : ''} hover:bg-muted/5 transition-colors`}>
+                                                <div className="flex items-center space-x-6 w-40">
+                                                    <Switch checked={dayData.isOpen} onCheckedChange={(c) => updateHours(day, "isOpen", c)} />
+                                                    <span className="capitalize font-medium text-lg">{day}</span>
+                                                </div>
+                                                {dayData.isOpen ? (
+                                                    <div className="flex items-center space-x-3">
+                                                        <Input type="time" className="w-36 h-10 text-center" value={dayData.open} onChange={e => updateHours(day, "open", e.target.value)} />
+                                                        <span className="text-muted-foreground font-medium">to</span>
+                                                        <Input type="time" className="w-36 h-10 text-center" value={dayData.close} onChange={e => updateHours(day, "close", e.target.value)} />
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground italic flex-1 text-center bg-muted/20 py-2 rounded-md mx-4">Closed</span>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <Button variant="ghost" size="lg" className="w-full text-base" onClick={() => setIsHoursEditing(false)}>Done Editing</Button>
+                            </div>
+                        )}
+                    </div>
+                );
+
+            case "services":
+                return (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                        <div className="space-y-2 border-b pb-4">
+                            <h2 className="text-2xl font-semibold tracking-tight">Services</h2>
+                            <p className="text-base text-muted-foreground">Verify your services. Price and duration are optional.</p>
+                        </div>
+                        <div className="space-y-6">
+                            {data.services.map((service, idx) => (
+                                <div key={idx} className="flex gap-6 items-start border p-6 rounded-xl relative group bg-card hover:shadow-md transition-shadow">
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1">
+                                        <div className="md:col-span-2 space-y-3">
+                                            <Label className="text-base">Service Name</Label>
+                                            <Input className="h-11 border-muted" value={service.name} onChange={e => updateService(idx, "name", e.target.value)} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <Label className="text-base">Price <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
+                                            <div className="relative">
+                                                <DollarSign className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                                                <Input type="number" className="pl-9 h-11 border-muted" placeholder="Ask client" value={service.price || ""} onChange={e => updateService(idx, "price", parseFloat(e.target.value))} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <Label className="text-base">Duration <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
+                                            <div className="relative">
+                                                <Clock className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                                                <Input type="number" className="pl-9 h-11 border-muted" placeholder="Variable" value={service.duration || ""} onChange={e => updateService(idx, "duration", parseFloat(e.target.value))} />
+                                            </div>
+                                        </div>
+                                        <div className="md:col-span-4 space-y-3">
+                                            <Label className="text-base">Description</Label>
+                                            <Input className="h-11 border-muted" value={service.description} onChange={e => updateService(idx, "description", e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <Button variant="ghost" size="icon" className="text-destructive h-10 w-10 bg-destructive/5 hover:bg-destructive/10" onClick={() => removeService(idx)}>
+                                        <Trash2 className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button variant="outline" size="lg" onClick={addService} className="w-full border-dashed h-12 text-base hover:bg-muted/50">
+                                <Plus className="mr-2 h-5 w-5" /> Add Service
+                            </Button>
+                        </div>
+                    </div>
+                );
+
+            case "faqs":
+                return (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                        <div className="space-y-2 border-b pb-4">
+                            <h2 className="text-2xl font-semibold tracking-tight">Frequently Asked Questions</h2>
+                            <p className="text-base text-muted-foreground">Review answers or defer them to your onboarding call.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {data.faqs.map((faq, idx) => (
+                                <div key={idx} className={`border p-6 rounded-xl space-y-4 relative transition-all duration-300 ${faq.askDuringCall ? "opacity-70 bg-muted/30 border-dashed" : "bg-card shadow-sm hover:shadow-md"}`}>
+                                    <div className="flex justify-between items-start gap-4">
+                                        <div className="space-y-2 flex-1">
+                                            <Label className="text-base font-medium leading-normal">Q: {faq.question}</Label>
+                                            <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100 inline-flex items-center gap-1 w-auto">
+                                                ✨ Suggested by AI
+                                            </span>
+                                        </div>
+                                        <Button variant="ghost" size="icon" className="text-destructive h-8 w-8 hover:bg-destructive/10 -mt-1 -mr-2" onClick={() => removeFAQ(idx)}>
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+
+                                    {!faq.askDuringCall && (
+                                        <div className="space-y-2 pt-2">
+                                            <Label className="text-sm font-medium text-muted-foreground">Answer</Label>
+                                            <Textarea className="min-h-[100px] resize-none" value={faq.answer} onChange={e => updateFAQ(idx, "answer", e.target.value)} />
+                                        </div>
+                                    )}
+
+                                    <div className="flex items-center space-x-3 pt-4 border-t mt-2">
+                                        <Checkbox
+                                            id={`defer-${idx}`}
+                                            checked={faq.askDuringCall}
+                                            onCheckedChange={(c) => updateFAQ(idx, "askDuringCall", c)}
+                                            className="h-5 w-5"
+                                        />
+                                        <Label htmlFor={`defer-${idx}`} className="text-sm cursor-pointer font-medium text-muted-foreground hover:text-foreground transition-colors">
+                                            Ask me this during onboarding call
+                                        </Label>
+                                    </div>
+                                </div>
+                            ))}
+                            <Button variant="outline" onClick={addFAQ} className="w-full border-dashed h-full min-h-[200px] flex flex-col gap-4 hover:bg-muted/50">
+                                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                                    <Plus className="h-6 w-6" />
+                                </div>
+                                <span className="font-medium text-lg">Add Custom Question</span>
+                            </Button>
+                        </div>
+                    </div>
+                );
+
+            case "finish":
+                return (
+                    <div className="text-center space-y-8 py-16 animate-in fade-in zoom-in duration-500">
+                        <div className="mx-auto w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 shadow-sm ring-8 ring-green-50 dark:ring-green-900/10">
+                            <Check className="w-12 h-12 text-green-600 dark:text-green-400" />
+                        </div>
+                        <h1 className="text-4xl font-bold tracking-tight text-foreground">Your AI Agent is Ready!</h1>
+                        <p className="text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                            We've saved your profile. We'll confirm any remaining details (like specific FAQs) during your onboarding call.
+                        </p>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="max-w-6xl mx-auto py-12 px-6">
+
+            {/* Upper Progress Bar Section */}
+            <div className="mb-8 space-y-3 max-w-3xl mx-auto">
+                <div className="flex justify-between text-sm font-medium text-muted-foreground">
+                    <span>Step {currentGlobalStep} of {totalSteps}</span>
+                    <span>{Math.round(progressValue)}% Completed</span>
+                </div>
+                <Progress value={progressValue} className="h-2.5" />
+            </div>
+
+            <Card className="min-h-[600px] flex flex-col shadow-xl border-muted/40 rounded-2xl overflow-hidden">
+                <CardContent className="flex-1 pt-6 px-8">
+                    {renderStepContent()}
+                </CardContent>
+
+                <div className="flex justify-between items-center border-t p-6 bg-muted/5 mt-auto">
+                    {/* Left Button (Back) */}
+                    <div>
+                        {currentStep > 0 && currentStep < STEPS.length - 1 && (
+                            <Button variant="outline" onClick={handleBack} disabled={loading} className="min-w-[100px]">
+                                <ChevronLeft className="w-4 h-4 mr-2" /> Back
+                            </Button>
+                        )}
+                    </div>
+
+                    {/* Right Button (Next/Finish) */}
+                    <div>
+                        {currentStep === 0 && (
+                            <Button size="lg" onClick={handleNext} className="min-w-[140px]">
+                                Continue <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
+                        {/* Special case: Hours step has its own main action button inside the card, but we keep Next here for consistency fallback or if editing is done */}
+                        {currentStep > 0 && currentStep < STEPS.length - 2 && STEPS[currentStep].id !== "hours" && (
+                            <Button onClick={handleNext} disabled={loading} className="min-w-[140px]">
+                                Next <ChevronRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
+                        {/* For Hours step, we hide the default Next button when in the 'Preview' mode because the big 'Yes, Correct' button does the job. 
+                            If editing, we might want it or rely on 'Done Editing'. Let's show it only if Editing, or relying on the big button. 
+                            Actually, standard UX suggests keeping the footer consistent. 
+                            But the design shows 'Yes Correct' in the card. Let's hide the footer Next button for Hours step to avoid confusion.
+                        */}
+                        {STEPS[currentStep].id === "hours" && isHoursEditing && (
+                            <Button onClick={() => setIsHoursEditing(false)} variant="ghost">Save View</Button>
+                        )}
+
+                        {currentStep === STEPS.length - 2 && (
+                            <Button onClick={handleSubmit} disabled={loading} className="min-w-[140px]">
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                                Finish & Save
+                            </Button>
+                        )}
+
+                        {currentStep === STEPS.length - 1 && (
+                            <Button onClick={() => router.push("/")} size="lg" className="min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
+                                Go to Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
+                    </div>
+                </div>
+            </Card>
+        </div>
+    );
+}
