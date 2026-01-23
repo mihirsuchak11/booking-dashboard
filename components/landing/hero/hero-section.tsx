@@ -28,7 +28,7 @@ export function HeroSection() {
 
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
               <Button
-                size="xl"
+                size="lg"
                 variant="default"
                 className="w-full sm:w-auto h-11 sm:h-12 px-4 sm:px-6 text-sm sm:text-base bg-primary text-white hover:bg-primary/80"
                 asChild
@@ -39,7 +39,7 @@ export function HeroSection() {
                 </a>
               </Button>
               <Button
-                size="xl"
+                size="lg"
                 variant="outline"
                 className="w-full sm:w-auto h-11 sm:h-12 px-4 sm:px-6 text-sm sm:text-base border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-white/40 hover:text-white transition-all"
                 asChild

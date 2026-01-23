@@ -42,7 +42,7 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
   return (
     <ComboboxPrimitive.Clear
       data-slot="combobox-clear"
-      render={<InputGroupButton variant="ghost" size="icon-xs" aria-label="Clear selection" />}
+      render={<InputGroupButton variant="ghost" size="icon-sm" aria-label="Clear selection" />}
       className={cn(className)}
       {...props}
     >
@@ -71,7 +71,7 @@ function ComboboxInput({
       <InputGroupAddon align="inline-end">
         {showTrigger && (
           <InputGroupButton
-            size="icon-xs"
+            size="icon-sm"
             variant="ghost"
             asChild
             data-slot="input-group-button"
@@ -245,7 +245,7 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
-          render={<Button variant="ghost" size="icon-xs" aria-label={`Remove ${typeof children === 'string' ? children : 'item'}`} />}
+          render={<Button variant="ghost" size="icon-sm" aria-label={`Remove ${typeof children === 'string' ? children : 'item'}`} />}
           className="-ml-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
         >

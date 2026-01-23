@@ -30,7 +30,7 @@ export function ThemeIndicator({
       <div className="relative rounded-2xl border border-border/50 bg-background/95 backdrop-blur-sm p-4 shadow-lg ring-1 ring-foreground/5">
         <Button
           variant="ghost"
-          size="icon-xs"
+          size="icon-sm"
           className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-background shadow-sm hover:bg-muted"
           onClick={() => setIsVisible(false)}
           aria-label="Close theme indicator"
