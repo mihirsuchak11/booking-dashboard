@@ -547,7 +547,7 @@ export default function ReviewProfilePage() {
                         )}
 
                         {currentStep === STEPS.length - 1 && (
-                            <Button onClick={() => router.push("/")} size="lg" className="min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
+                            <Button onClick={() => router.push("/dashboard")} size="lg" className="min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
                                 Go to Dashboard <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
