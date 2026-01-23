@@ -1,0 +1,33 @@
+/**
+ * EXCEPTION: Custom CSS for animations
+ * 
+ * This file contains @keyframes animations for infinite scrolling that cannot
+ * be easily replicated with Tailwind CSS. These animations are performance-optimized
+ * and include prefers-reduced-motion support for accessibility.
+ * 
+ * Rule Exception: .cursor/rules/nextjs-shadcn.mdc - "No custom CSS files"
+ * Justification: Complex infinite scroll animations require custom CSS with
+ * will-change optimization and accessibility considerations.
+ */
+
+/* Partner Slider Specific Animations */
+
+@keyframes infinite-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 30s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-infinite-scroll {
+    animation: none;
+  }
+}

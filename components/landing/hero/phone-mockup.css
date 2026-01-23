@@ -1,0 +1,44 @@
+/**
+ * EXCEPTION: Custom CSS for animations
+ * 
+ * This file contains @keyframes animations for phone mockup appearance and
+ * bubble slide-up effects that cannot be easily replicated with Tailwind CSS.
+ * These animations are performance-optimized with proper timing functions.
+ * 
+ * Rule Exception: .cursor/rules/nextjs-shadcn.mdc - "No custom CSS files"
+ * Justification: Complex multi-stage animations (phoneAppear, bubbleSlideUp)
+ * require custom CSS with specific timing and transform combinations.
+ */
+
+/* Phone Mockup Specific Animations */
+
+@keyframes phoneAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-phone-appear {
+  animation: phoneAppear 0.6s ease-out forwards;
+}
+
+@keyframes bubbleSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-bubble-slide-up {
+  opacity: 0;
+  animation: bubbleSlideUp 0.4s ease-out forwards;
+}

@@ -1,0 +1,77 @@
+/**
+ * EXCEPTION: Custom CSS for third-party library overrides
+ * 
+ * This file contains custom styles for Swiper.js library components that require
+ * !important overrides to customize the default library styles. These styles
+ * include pagination, slide transitions, and carousel-specific animations.
+ * 
+ * Rule Exception: .cursor/rules/nextjs-shadcn.mdc - "No custom CSS files"
+ * Justification: Third-party library (Swiper) customization requires !important
+ * overrides that cannot be achieved with Tailwind utility classes alone.
+ * These styles are necessary for the testimonials carousel functionality.
+ */
+
+/* Swiper Custom Styles */
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 2rem;
+  bottom: 0 !important;
+}
+
+.swiper-pagination-bullet {
+  width: 8px !important;
+  height: 8px !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+  border-radius: 4px !important;
+}
+
+.swiper-pagination-bullet-active {
+  width: 32px !important;
+  background: oklch(0.541 0.281 293) !important;
+  border-radius: 4px !important;
+}
+
+.swiper-slide {
+  height: auto !important;
+  display: flex !important;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.swiper-wrapper {
+  align-items: stretch !important;
+}
+
+/* Testimonials Carousel - 4 cards with 2 centered visible */
+.testimonials-swiper .swiper-slide {
+  opacity: 0.6;
+  transform: scale(0.95);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.testimonials-swiper .swiper-slide-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.testimonials-swiper .swiper-slide-active + .swiper-slide {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.testimonials-swiper .swiper-slide-prev {
+  opacity: 0.7;
+  transform: scale(0.97);
+}
+
+.testimonials-swiper .swiper-slide-next {
+  opacity: 0.7;
+  transform: scale(0.97);
+}
+
+.testimonials-swiper .swiper-slide-prev + .swiper-slide-prev,
+.testimonials-swiper .swiper-slide-next + .swiper-slide-next {
+  opacity: 0.5;
+  transform: scale(0.92);
+}

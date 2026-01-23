@@ -1,0 +1,81 @@
+/**
+ * EXCEPTION: Theme-specific CSS variables
+ * 
+ * This file contains CSS variable overrides for the Azure theme demo page.
+ * These variables are required for theme customization and cannot be easily
+ * replicated with Tailwind utility classes alone.
+ * 
+ * Rule Exception: .cursor/rules/nextjs-shadcn.mdc - "No custom CSS files"
+ * Justification: Theme system requires CSS variable overrides for color
+ * customization. Each demo page has its own theme file for theme switching
+ * functionality.
+ */
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0.006 235);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.006 235);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.006 235);
+  --primary: oklch(0.63 0.20 235);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.968 0.004 235);
+  --secondary-foreground: oklch(0.274 0.008 235);
+  --muted: oklch(0.968 0.004 235);
+  --muted-foreground: oklch(0.545 0.012 235);
+  --accent: oklch(0.958 0.008 235);
+  --accent-foreground: oklch(0.274 0.008 235);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.918 0.006 235);
+  --input: oklch(0.918 0.006 235);
+  --ring: oklch(0.63 0.20 235);
+  --chart-1: oklch(0.75 0.22 293);
+  --chart-2: oklch(0.65 0.25 293);
+  --chart-3: oklch(0.541 0.281 293);
+  --chart-4: oklch(0.48 0.26 293);
+  --chart-5: oklch(0.42 0.24 293);
+  --radius: 0.875rem;
+  --sidebar: oklch(0.985 0.003 290);
+  --sidebar-foreground: oklch(0.145 0.012 290);
+  --sidebar-primary: oklch(0.63 0.20 235);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.968 0.004 235);
+  --sidebar-accent-foreground: oklch(0.274 0.008 235);
+  --sidebar-border: oklch(0.918 0.006 235);
+  --sidebar-ring: oklch(0.63 0.20 235);
+}
+
+.dark {
+  --background: oklch(0.145 0.006 235);
+  --foreground: oklch(0.985 0.002 235);
+  --card: oklch(0.185 0.008 235);
+  --card-foreground: oklch(0.985 0.002 235);
+  --popover: oklch(0.185 0.008 235);
+  --popover-foreground: oklch(0.985 0.002 235);
+  --primary: oklch(0.68 0.18 235);
+  --primary-foreground: oklch(0.145 0.006 235);
+  --secondary: oklch(0.22 0.012 235);
+  --secondary-foreground: oklch(0.985 0.002 235);
+  --muted: oklch(0.22 0.012 235);
+  --muted-foreground: oklch(0.628 0.008 235);
+  --accent: oklch(0.28 0.014 235);
+  --accent-foreground: oklch(0.985 0.002 235);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.68 0.18 235);
+  --chart-1: oklch(0.75 0.22 293);
+  --chart-2: oklch(0.65 0.25 293);
+  --chart-3: oklch(0.65 0.24 293);
+  --chart-4: oklch(0.55 0.22 293);
+  --chart-5: oklch(0.48 0.20 293);
+  --sidebar: oklch(0.185 0.008 235);
+  --sidebar-foreground: oklch(0.985 0.002 235);
+  --sidebar-primary: oklch(0.68 0.18 235);
+  --sidebar-primary-foreground: oklch(0.145 0.006 235);
+  --sidebar-accent: oklch(0.22 0.012 235);
+  --sidebar-accent-foreground: oklch(0.985 0.002 235);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.68 0.18 235);
+}
