@@ -1,0 +1,67 @@
+/**
+ * EXCEPTION: Custom CSS for complex animations
+ * 
+ * This file contains @keyframes animations and pseudo-element styling
+ * (::before, ::after) that cannot be easily replicated with Tailwind CSS alone.
+ * 
+ * Rule Exception: .cursor/rules/nextjs-shadcn.mdc - "No custom CSS files"
+ * Justification: Complex gradient animations with pseudo-elements require
+ * custom CSS. These animations are performance-optimized and include
+ * hover state transitions.
+ * 
+ * Consideration: If these animations become reusable across components,
+ * consider moving them to app/globals.css under a shared animations section.
+ */
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #00f0ff 0%, #3b82f6 25%, #8b5cf6 50%, #ec4899 75%, #00f0ff 100%);
+  background-size: 200% 200%;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(139, 92, 246, 0.3);
+  animation: gradient-shift 3s ease infinite;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Shimmer effect overlay */
+.cta-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+  z-index: 1;
+  border-radius: 13px;
+  pointer-events: none;
+}
+
+/* Inner solid button */
+.cta-button::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #000;
+  border-radius: 13px;
+  z-index: 0;
+}
+
+
+.cta-button:hover {
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.6), 0 0 60px rgba(139, 92, 246, 0.5), 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation-duration: 1.5s;
+}
+
+.cta-button:hover::before {
+  left: 100%;
+}

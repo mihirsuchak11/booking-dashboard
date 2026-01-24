@@ -1,0 +1,47 @@
+/**
+ * EXCEPTION: Custom CSS for animations
+ * 
+ * This file contains @keyframes animations for Radix UI Accordion component
+ * that integrate with CSS variables (--radix-accordion-content-height) and
+ * cannot be easily replicated with Tailwind CSS.
+ * 
+ * Rule Exception: .cursor/rules/nextjs-shadcn.mdc - "No custom CSS files"
+ * Justification: Radix UI accordion animations require integration with
+ * component-specific CSS variables and include prefers-reduced-motion support
+ * for accessibility.
+ */
+
+/* FAQ Section - Accordion Animations */
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-accordion-down,
+  .animate-accordion-up {
+    animation: none;
+  }
+}
