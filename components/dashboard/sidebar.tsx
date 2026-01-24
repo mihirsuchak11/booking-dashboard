@@ -168,10 +168,10 @@ export function DashboardSidebar({
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === "/"}
+                  isActive={pathname === "/dashboard"}
                   className="h-7 text-sm text-muted-foreground"
                 >
-                  <Link href="/">
+                  <Link href="/dashboard">
                     <LayoutDashboard className="size-4" />
                     <span>Dashboard</span>
                   </Link>

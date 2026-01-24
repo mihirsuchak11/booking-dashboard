@@ -77,7 +77,7 @@ export async function signInAction(
   // Store only the user ID in a secure HTTP-only cookie.
   await setAuthenticatedUserId(data.user.id);
 
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function signOutAction() {

@@ -52,7 +52,7 @@ export function ReviewForm() {
                 sessionStorage.removeItem("onboarding_state");
                 sessionStorage.removeItem("onboarding_state_v2");
                 sessionStorage.removeItem("onboarding_generated_full_profile");
-                router.push("/"); // Redirect to dashboard home
+                router.push("/dashboard"); // Redirect to dashboard home
             } else {
                 toast.error(result.error || "Failed to save business details.");
                 setSubmitting(false);

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
         if (businessId) {
             // Existing user with business - go to dashboard
             console.log("[OAuth Callback] User has business, redirecting to dashboard");
-            return NextResponse.redirect(new URL("/", request.url));
+            return NextResponse.redirect(new URL("/dashboard", request.url));
         } else {
             // New user - needs to complete onboarding
             console.log("[OAuth Callback] New user, redirecting to onboarding");
