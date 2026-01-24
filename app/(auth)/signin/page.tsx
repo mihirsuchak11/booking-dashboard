@@ -175,7 +175,7 @@ export default async function SignInPage({
 
       </div>
       <div className="relative mt-8 text-center text-xs" style={{ color: `var(--auth-text-muted)` }}>
-        © 2026 AI tele caller. All rights reserved.
+        © {new Date().getFullYear()} AI tele caller. All rights reserved.
       </div>
     </div>
   );

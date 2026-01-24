@@ -166,7 +166,7 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-semibold">Services & Packages</h2>
@@ -247,7 +247,7 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
             </h4>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Service Name</label>
+                <label className="text-sm font-medium text-muted-foreground">Service Name</label>
                 <Input
                   placeholder="e.g. Initial Consultation"
                   value={newService.name}
@@ -259,7 +259,7 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <label className="text-sm font-medium">Duration</label>
+                  <label className="text-sm font-medium text-muted-foreground">Duration</label>
                   <Select
                     value={String(newService.duration)}
                     onValueChange={(val) =>
@@ -279,7 +279,7 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <label className="text-sm font-medium">Price ({currencySymbol})</label>
+                  <label className="text-sm font-medium text-muted-foreground">Price ({currencySymbol})</label>
                   <div className="relative">
                     <span className="absolute left-2.5 top-2.5 text-sm text-muted-foreground">
                       {currencySymbol}
@@ -301,7 +301,7 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Description (Optional)</label>
+                <label className="text-sm font-medium text-muted-foreground">Description (Optional)</label>
                 <Input
                   placeholder="Brief details about this service..."
                   value={newService.description}

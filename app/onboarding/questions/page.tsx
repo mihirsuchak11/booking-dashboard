@@ -7,12 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { saveKnowledgeBase, submitOnboardingAction } from "../actions";
+import { BrandedBackground } from "@/components/branded-background";
+import { BrandedCard } from "@/components/branded-card";
 
 // Types matching our schema
 interface FAQ {
@@ -246,62 +247,62 @@ export default function ReviewProfilePage() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <Label className="text-base">Business Name</Label>
+                                <Label className="text-sm">Business Name</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.name || ""} disabled className="bg-muted/30 border-muted h-12 text-lg" />
-                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
+                                    <Input value={data.businessInfo.name || ""} disabled className="bg-muted/30 border-muted h-9" />
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
                                         <MapPin className="w-3 h-3" /> Google
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-base">Category</Label>
+                                <Label className="text-sm">Category</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.category || ""} disabled className="bg-muted/30 border-muted h-12 text-lg" />
-                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
+                                    <Input value={data.businessInfo.category || ""} disabled className="bg-muted/30 border-muted h-9" />
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
                                         <Globe className="w-3 h-3" /> Google
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-base">Phone</Label>
+                                <Label className="text-sm">Phone</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.phone || ""} onChange={e => updateBusinessInfo("phone", e.target.value)} className="h-12 text-lg" />
-                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
+                                    <Input value={data.businessInfo.phone || ""} onChange={e => updateBusinessInfo("phone", e.target.value)} className="h-9" />
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
                                         <Phone className="w-3 h-3" /> Google
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-base">Address</Label>
+                                <Label className="text-sm">Address</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.address || ""} onChange={e => updateBusinessInfo("address", e.target.value)} className="h-12 text-lg" />
-                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
+                                    <Input value={data.businessInfo.address || ""} onChange={e => updateBusinessInfo("address", e.target.value)} className="h-9" />
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
                                         <MapPin className="w-3 h-3" /> Google
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-base">Website</Label>
+                                <Label className="text-sm">Website</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.website || ""} onChange={e => updateBusinessInfo("website", e.target.value)} className="h-12 text-lg" />
-                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
+                                    <Input value={data.businessInfo.website || ""} onChange={e => updateBusinessInfo("website", e.target.value)} className="h-9" />
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
                                         <Globe className="w-3 h-3" /> Google
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-base">Email</Label>
+                                <Label className="text-sm">Email</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.email || ""} onChange={e => updateBusinessInfo("email", e.target.value)} className="h-12 text-lg" />
-                                    <div className="absolute right-3 top-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-50 text-xs font-medium text-orange-600 border border-orange-100 shadow-sm">
+                                    <Input value={data.businessInfo.email || ""} onChange={e => updateBusinessInfo("email", e.target.value)} className="h-9" />
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-50 text-xs font-medium text-orange-600 border border-orange-100 shadow-sm">
                                         <Mail className="w-3 h-3" /> Website
                                     </div>
                                 </div>
                             </div>
                             <div className="col-span-1 md:col-span-2 space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-base">Description</Label>
+                                    <Label className="text-sm">Description</Label>
                                     <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full border border-purple-100 flex items-center gap-1">
                                         ✨ AI-Generated
                                     </span>
@@ -358,9 +359,9 @@ export default function ReviewProfilePage() {
                                                 </div>
                                                 {dayData.isOpen ? (
                                                     <div className="flex items-center space-x-3">
-                                                        <Input type="time" className="w-36 h-10 text-center" value={dayData.open} onChange={e => updateHours(day, "open", e.target.value)} />
+                                                        <Input type="time" className="w-36 h-9 text-center" value={dayData.open} onChange={e => updateHours(day, "open", e.target.value)} />
                                                         <span className="text-muted-foreground font-medium">to</span>
-                                                        <Input type="time" className="w-36 h-10 text-center" value={dayData.close} onChange={e => updateHours(day, "close", e.target.value)} />
+                                                        <Input type="time" className="w-36 h-9 text-center" value={dayData.close} onChange={e => updateHours(day, "close", e.target.value)} />
                                                     </div>
                                                 ) : (
                                                     <span className="text-muted-foreground italic flex-1 text-center bg-muted/20 py-2 rounded-md mx-4">Closed</span>
@@ -387,26 +388,26 @@ export default function ReviewProfilePage() {
                                 <div key={idx} className="flex gap-6 items-start border p-6 rounded-xl relative group bg-card hover:shadow-md transition-shadow">
                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1">
                                         <div className="md:col-span-2 space-y-3">
-                                            <Label className="text-base">Service Name</Label>
-                                            <Input className="h-11 border-muted" value={service.name} onChange={e => updateService(idx, "name", e.target.value)} />
+                                            <Label className="text-sm">Service Name</Label>
+                                            <Input className="h-9 border-muted" value={service.name} onChange={e => updateService(idx, "name", e.target.value)} />
                                         </div>
                                         <div className="space-y-3">
-                                            <Label className="text-base">Price <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
+                                            <Label className="text-sm">Price <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
                                             <div className="relative">
-                                                <DollarSign className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
-                                                <Input type="number" className="pl-9 h-11 border-muted" placeholder="Ask client" value={service.price || ""} onChange={e => updateService(idx, "price", parseFloat(e.target.value))} />
+                                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                                <Input type="number" className="pl-9 h-9 border-muted" placeholder="Ask client" value={service.price || ""} onChange={e => updateService(idx, "price", parseFloat(e.target.value))} />
                                             </div>
                                         </div>
                                         <div className="space-y-3">
-                                            <Label className="text-base">Duration <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
+                                            <Label className="text-sm">Duration <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
                                             <div className="relative">
-                                                <Clock className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
-                                                <Input type="number" className="pl-9 h-11 border-muted" placeholder="Variable" value={service.duration || ""} onChange={e => updateService(idx, "duration", parseFloat(e.target.value))} />
+                                                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                                <Input type="number" className="pl-9 h-9 border-muted" placeholder="Variable" value={service.duration || ""} onChange={e => updateService(idx, "duration", parseFloat(e.target.value))} />
                                             </div>
                                         </div>
                                         <div className="md:col-span-4 space-y-3">
-                                            <Label className="text-base">Description</Label>
-                                            <Input className="h-11 border-muted" value={service.description} onChange={e => updateService(idx, "description", e.target.value)} />
+                                            <Label className="text-sm">Description</Label>
+                                            <Input className="h-9 border-muted" value={service.description} onChange={e => updateService(idx, "description", e.target.value)} />
                                         </div>
                                     </div>
                                     <Button variant="ghost" size="icon" className="text-destructive h-10 w-10 bg-destructive/5 hover:bg-destructive/10" onClick={() => removeService(idx)}>
@@ -433,7 +434,7 @@ export default function ReviewProfilePage() {
                                 <div key={idx} className={`border p-6 rounded-xl space-y-4 relative transition-all duration-300 ${faq.askDuringCall ? "opacity-70 bg-muted/30 border-dashed" : "bg-card shadow-sm hover:shadow-md"}`}>
                                     <div className="flex justify-between items-start gap-4">
                                         <div className="space-y-2 flex-1">
-                                            <Label className="text-base font-medium leading-normal">Q: {faq.question}</Label>
+                                            <Label className="text-sm font-medium leading-normal">Q: {faq.question}</Label>
                                             <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100 inline-flex items-center gap-1 w-auto">
                                                 ✨ Suggested by AI
                                             </span>
@@ -491,69 +492,70 @@ export default function ReviewProfilePage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto py-12 px-6">
-
-            {/* Upper Progress Bar Section */}
-            <div className="mb-8 space-y-3 max-w-3xl mx-auto">
-                <div className="flex justify-between text-sm font-medium text-muted-foreground">
-                    <span>Step {currentGlobalStep} of {totalSteps}</span>
-                    <span>{Math.round(progressValue)}% Completed</span>
+        <BrandedBackground>
+            <div className="w-full max-w-6xl px-6">
+                {/* Upper Progress Bar Section */}
+                <div className="mb-8 space-y-3 max-w-3xl mx-auto">
+                    <div className="flex justify-between text-sm font-medium" style={{ color: 'var(--auth-text-secondary)' }}>
+                        <span>Step {currentGlobalStep} of {totalSteps}</span>
+                        <span>{Math.round(progressValue)}% Completed</span>
+                    </div>
+                    <Progress value={progressValue} className="h-2.5" />
                 </div>
-                <Progress value={progressValue} className="h-2.5" />
+
+                <BrandedCard className="min-h-[600px] flex flex-col">
+                    <div className="flex-1 pt-6 px-8 pb-8">
+                        {renderStepContent()}
+                    </div>
+
+                    <div className="flex justify-between items-center border-t p-6 mt-auto" style={{ borderColor: 'var(--auth-card-border)', backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                        {/* Left Button (Back) */}
+                        <div>
+                            {currentStep > 0 && currentStep < STEPS.length - 1 && (
+                                <Button variant="outline" onClick={handleBack} disabled={loading} className="min-w-[100px]">
+                                    <ChevronLeft className="w-4 h-4 mr-2" /> Back
+                                </Button>
+                            )}
+                        </div>
+
+                        {/* Right Button (Next/Finish) */}
+                        <div>
+                            {currentStep === 0 && (
+                                <Button size="lg" onClick={handleNext} className="min-w-[140px]">
+                                    Continue <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            )}
+                            {/* Special case: Hours step has its own main action button inside the card, but we keep Next here for consistency fallback or if editing is done */}
+                            {currentStep > 0 && currentStep < STEPS.length - 2 && STEPS[currentStep].id !== "hours" && (
+                                <Button onClick={handleNext} disabled={loading} className="min-w-[140px]">
+                                    Next <ChevronRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            )}
+                            {/* For Hours step, we hide the default Next button when in the 'Preview' mode because the big 'Yes, Correct' button does the job. 
+                                If editing, we might want it or rely on 'Done Editing'. Let's show it only if Editing, or relying on the big button. 
+                                Actually, standard UX suggests keeping the footer consistent. 
+                                But the design shows 'Yes Correct' in the card. Let's hide the footer Next button for Hours step to avoid confusion.
+                            */}
+                            {STEPS[currentStep].id === "hours" && isHoursEditing && (
+                                <Button onClick={() => setIsHoursEditing(false)} variant="ghost">Save View</Button>
+                            )}
+
+                            {currentStep === STEPS.length - 2 && (
+                                <Button onClick={handleSubmit} disabled={loading} className="min-w-[140px]">
+                                    {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                                    Finish & Save
+                                </Button>
+                            )}
+
+                            {currentStep === STEPS.length - 1 && (
+                                <Button onClick={() => router.push("/dashboard")} size="lg" className="min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
+                                    Go to Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                </BrandedCard>
             </div>
-
-            <Card className="min-h-[600px] flex flex-col shadow-xl border-muted/40 rounded-2xl overflow-hidden">
-                <CardContent className="flex-1 pt-6 px-8">
-                    {renderStepContent()}
-                </CardContent>
-
-                <div className="flex justify-between items-center border-t p-6 bg-muted/5 mt-auto">
-                    {/* Left Button (Back) */}
-                    <div>
-                        {currentStep > 0 && currentStep < STEPS.length - 1 && (
-                            <Button variant="outline" onClick={handleBack} disabled={loading} className="min-w-[100px]">
-                                <ChevronLeft className="w-4 h-4 mr-2" /> Back
-                            </Button>
-                        )}
-                    </div>
-
-                    {/* Right Button (Next/Finish) */}
-                    <div>
-                        {currentStep === 0 && (
-                            <Button size="lg" onClick={handleNext} className="min-w-[140px]">
-                                Continue <ArrowRight className="w-4 h-4 ml-2" />
-                            </Button>
-                        )}
-                        {/* Special case: Hours step has its own main action button inside the card, but we keep Next here for consistency fallback or if editing is done */}
-                        {currentStep > 0 && currentStep < STEPS.length - 2 && STEPS[currentStep].id !== "hours" && (
-                            <Button onClick={handleNext} disabled={loading} className="min-w-[140px]">
-                                Next <ChevronRight className="w-4 h-4 ml-2" />
-                            </Button>
-                        )}
-                        {/* For Hours step, we hide the default Next button when in the 'Preview' mode because the big 'Yes, Correct' button does the job. 
-                            If editing, we might want it or rely on 'Done Editing'. Let's show it only if Editing, or relying on the big button. 
-                            Actually, standard UX suggests keeping the footer consistent. 
-                            But the design shows 'Yes Correct' in the card. Let's hide the footer Next button for Hours step to avoid confusion.
-                        */}
-                        {STEPS[currentStep].id === "hours" && isHoursEditing && (
-                            <Button onClick={() => setIsHoursEditing(false)} variant="ghost">Save View</Button>
-                        )}
-
-                        {currentStep === STEPS.length - 2 && (
-                            <Button onClick={handleSubmit} disabled={loading} className="min-w-[140px]">
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                                Finish & Save
-                            </Button>
-                        )}
-
-                        {currentStep === STEPS.length - 1 && (
-                            <Button onClick={() => router.push("/dashboard")} size="lg" className="min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
-                                Go to Dashboard <ArrowRight className="w-4 h-4 ml-2" />
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </Card>
-        </div>
+        </BrandedBackground>
     );
 }

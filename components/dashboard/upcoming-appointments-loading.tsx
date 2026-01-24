@@ -2,7 +2,7 @@ import { Calendar } from "lucide-react";
 
 export function UpcomingAppointmentsLoading() {
   return (
-    <div className="relative rounded-xl border border-border bg-card max-h-[400px] overflow-hidden">
+    <div className="relative rounded-3xl border border-border bg-card max-h-[400px] overflow-hidden">
       <div className="h-full overflow-y-auto">
         <div className="p-6 pb-4">
           <div className="flex items-center justify-between mb-4">
@@ -35,7 +35,7 @@ export function UpcomingAppointmentsLoading() {
       </div>
 
       {/* Shadow matching the actual component */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent pointer-events-none rounded-b-xl" />
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent pointer-events-none rounded-b-3xl" />
     </div>
   );
 }

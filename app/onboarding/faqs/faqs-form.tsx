@@ -42,7 +42,7 @@ export function FAQsForm() {
     };
 
     return (
-        <div className="w-full max-w-lg mx-auto space-y-8">
+        <div className="w-full space-y-8">
 
             {/* Header */}
             <div className="space-y-2">
@@ -65,11 +65,11 @@ export function FAQsForm() {
                     {faqs.map((faq) => (
                         <div
                             key={faq.id}
-                            className="border rounded-lg p-4 bg-card group space-y-2"
+                            className="border border-border/50 rounded-lg p-4 bg-card/50 backdrop-blur-sm group space-y-2"
                         >
                             <div className="flex items-start justify-between gap-4">
                                 <div className="space-y-1">
-                                    <h3 className="font-medium flex items-center gap-2">
+                                    <h3 className="font-medium flex items-center gap-2 text-foreground">
                                         <MessageCircle className="h-3 w-3 text-primary" />
                                         {faq.question}
                                     </h3>
@@ -90,14 +90,14 @@ export function FAQsForm() {
                     ))}
 
                     {faqs.length === 0 && !isAdding && (
-                        <div className="text-center py-8 border-2 border-dashed rounded-lg text-muted-foreground">
+                        <div className="text-center py-8 border-2 border-dashed border-border/50 rounded-lg text-muted-foreground">
                             No FAQs added yet.
                         </div>
                     )}
                 </div>
 
                 {isAdding || faqs.length === 0 ? (
-                    <div className="border rounded-lg p-6 space-y-6 bg-muted/30">
+                    <div className="border border-border/50 rounded-lg p-6 space-y-6 bg-card/30 backdrop-blur-sm">
                         <div className="grid gap-4">
                             <div className="grid gap-2">
                                 <Label className="text-sm font-medium">Question</Label>
@@ -124,7 +124,7 @@ export function FAQsForm() {
                         </div>
 
                         <div className="flex gap-3 pt-2">
-                            <Button onClick={handleAddFAQ} disabled={!newFAQ.question || !newFAQ.answer} className="w-full">
+                            <Button onClick={handleAddFAQ} disabled={!newFAQ.question || !newFAQ.answer} className="flex-1">
                                 {faqs.length === 0 ? "Add First FAQ" : "Save FAQ"}
                             </Button>
                             {faqs.length > 0 && (
@@ -137,7 +137,7 @@ export function FAQsForm() {
                 ) : (
                     <Button
                         variant="outline"
-                        className="w-full border-dashed"
+                        className="w-full border-dashed text-foreground"
                         onClick={() => setIsAdding(true)}
                     >
                         <Plus className="h-4 w-4 mr-2" /> Add Another Question

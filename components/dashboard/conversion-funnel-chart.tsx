@@ -110,7 +110,7 @@ export function ConversionFunnelChart({
   const yAxisMax = Math.ceil(maxValue / 50) * 50;
 
   return (
-    <div className="relative rounded-xl border border-border bg-card p-6 max-h-[400px] overflow-y-auto">
+    <div className="relative rounded-3xl border border-border bg-card p-6 max-h-[400px] overflow-y-auto">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Phone className="size-4 text-muted-foreground" />
@@ -231,6 +231,7 @@ export function ConversionFunnelChart({
               width={40}
             />
             <RechartsTooltip
+              cursor={{ fill: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)' }}
               contentStyle={{
                 backgroundColor: "transparent",
                 border: "none",

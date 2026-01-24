@@ -220,7 +220,7 @@ export function CallLogTable({ calls, timezone, page, pageSize, totalCount }: Ca
   };
 
   return (
-    <div className="rounded-xl border border-border bg-card">
+    <div className="rounded-3xl border border-border bg-card">
       <div className="p-6 pb-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

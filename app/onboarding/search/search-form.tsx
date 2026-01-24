@@ -318,7 +318,7 @@ export function SearchForm() {
         return (
             <div className="flex flex-col items-center justify-center h-full min-h-[400px] space-y-8 animate-in fade-in zoom-in duration-300">
                 <div className="space-y-4 text-center">
-                    <h2 className="text-2xl font-bold">Setting up {businessName || searchState?.searchTerm || "your business"}</h2>
+                    <h2 className="text-2xl font-bold text-foreground">Setting up {businessName || searchState?.searchTerm || "your business"}</h2>
                     <p className="text-muted-foreground">{status}</p>
                 </div>
 
@@ -360,7 +360,7 @@ export function SearchForm() {
                             value={region}
                             onValueChange={(val: RegionCode) => setRegion(val)}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger className="[&>svg]:text-muted-foreground">
                                 {mounted ? (
                                     <span className="flex items-center">
                                         <span className="text-lg mr-2">{REGION_OPTIONS.find(o => o.value === region)?.flag}</span>
@@ -410,7 +410,7 @@ export function SearchForm() {
                                 {isLocating ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
-                                    <LocateFixed className="h-4 w-4" />
+                                    <LocateFixed className="h-4 w-4 text-foreground" />
                                 )}
                             </Button>
                         </div>

@@ -133,9 +133,9 @@ export function BusinessSelectionDialog({
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex flex-col">
+                    <div className="flex flex-col max-h-[60vh]">
                         {/* Business Cards - Scrollable */}
-                        <div className="space-y-3 max-h-[45vh] overflow-y-auto pr-1">
+                        <div className="flex-1 space-y-3 overflow-y-auto pr-1 min-h-0">
                             {businesses.map((business) => (
                                 <BusinessCard
                                     key={business.id}
@@ -147,7 +147,7 @@ export function BusinessSelectionDialog({
                         </div>
 
                         {/* Actions - Fixed at bottom */}
-                        <div className="flex flex-col gap-3 pt-4 mt-4 border-t sticky bottom-0 bg-background">
+                        <div className="flex flex-col gap-3 pt-4 mt-4 border-t flex-shrink-0 -mx-6 px-6">
                             <ConfirmButton
                                 selectedBusiness={selectedBusiness}
                                 onClick={handleConfirm}

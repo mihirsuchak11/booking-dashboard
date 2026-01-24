@@ -1,4 +1,4 @@
-import "./auth.css";
+import "@/app/styles/branded-layout.css";
 
 export default function AuthLayout({
   children,

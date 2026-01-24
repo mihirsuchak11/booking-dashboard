@@ -12,7 +12,7 @@ export async function CallLogWrapper({ businessId, searchParams }: CallLogWrappe
   // Check if Supabase is configured
   if (!isSupabaseConfigured()) {
     return (
-      <div className="rounded-xl border border-border bg-card p-6">
+      <div className="rounded-3xl border border-border bg-card p-6">
         <div className="flex items-center gap-2 mb-4">
           <PhoneOff className="size-4 text-muted-foreground" />
           <h2 className="text-[15px] font-normal text-foreground tracking-[-0.45px]">

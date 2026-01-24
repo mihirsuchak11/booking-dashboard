@@ -153,7 +153,7 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">Operating Hours</h2>
         <p className="text-sm text-muted-foreground mb-6">
           Set when your business is available for appointments
@@ -175,7 +175,7 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
                 />
                 <label
                   htmlFor={`${day}-open`}
-                  className="text-sm font-medium cursor-pointer"
+                  className="text-sm font-medium text-muted-foreground cursor-pointer"
                 >
                   {capitalizeDay(day)}
                 </label>
@@ -207,12 +207,12 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
         </div>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">Booking Settings</h2>
 
         <div className="space-y-4">
           <div className="grid gap-2">
-            <label className="text-sm font-medium flex items-center gap-2">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Clock className="h-4 w-4" />
               Minimum Notice Required
             </label>
@@ -233,7 +233,7 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium flex items-center gap-2">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Clock className="h-4 w-4" />
               Buffer Time Between Appointments
             </label>
@@ -254,7 +254,7 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium flex items-center gap-2">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Advance Booking Limit
             </label>

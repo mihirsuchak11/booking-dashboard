@@ -65,7 +65,7 @@ export function ReviewForm() {
     };
 
     return (
-        <div className="w-full max-w-lg mx-auto space-y-8">
+        <div className="w-full space-y-8">
 
             {/* Header */}
             <div className="space-y-2">
@@ -86,7 +86,7 @@ export function ReviewForm() {
             <div className="space-y-6">
 
                 {/* Business Profile Summary */}
-                <div className="border rounded-lg p-4 space-y-3 bg-card">
+                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
                     <div className="flex items-center justify-between">
                         <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider">
                             <Store className="h-4 w-4" /> Business Profile
@@ -96,7 +96,7 @@ export function ReviewForm() {
                         </Button>
                     </div>
                     <div className="space-y-2 pl-6">
-                        <div className="font-medium text-lg">{businessInfo.name}</div>
+                        <div className="font-medium text-lg text-foreground">{businessInfo.name}</div>
                         <div className="grid grid-cols-2 gap-y-1 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2"><Briefcase className="h-3 w-3" /> {businessInfo.type === 'other' ? businessInfo.customBusinessType : businessInfo.type}</div>
                             <div className="flex items-center gap-2"><MapPin className="h-3 w-3" /> {businessInfo.address || "No address"}</div>
@@ -107,7 +107,7 @@ export function ReviewForm() {
                 </div>
 
                 {/* Services Summary */}
-                <div className="border rounded-lg p-4 space-y-3 bg-card">
+                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
                     <div className="flex items-center justify-between">
                         <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider">
                             <Package className="h-4 w-4" /> Services ({services.length})
@@ -120,7 +120,7 @@ export function ReviewForm() {
                         {services.length > 0 ? (
                             services.slice(0, 3).map((s) => (
                                 <div key={s.id} className="flex justify-between text-sm">
-                                    <span>{s.name}</span>
+                                    <span className="text-foreground">{s.name}</span>
                                     <span className="text-muted-foreground">{formatCurrency(s.price, businessInfo.region)}</span>
                                 </div>
                             ))
@@ -134,7 +134,7 @@ export function ReviewForm() {
                 </div>
 
                 {/* FAQs Summary */}
-                <div className="border rounded-lg p-4 space-y-3 bg-card">
+                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
                     <div className="flex items-center justify-between">
                         <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider">
                             <MessageCircle className="h-4 w-4" /> FAQs ({faqs.length})
@@ -147,7 +147,7 @@ export function ReviewForm() {
                         {faqs.length > 0 ? (
                             faqs.slice(0, 2).map((q) => (
                                 <div key={q.id} className="text-sm">
-                                    <div className="font-medium truncate">{q.question}</div>
+                                    <div className="font-medium truncate text-foreground">{q.question}</div>
                                     <div className="text-muted-foreground truncate text-xs">{q.answer}</div>
                                 </div>
                             ))

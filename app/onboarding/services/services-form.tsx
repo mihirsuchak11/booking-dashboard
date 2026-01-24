@@ -97,7 +97,7 @@ export function ServicesForm() {
     }
 
     return (
-        <div className="w-full max-w-lg mx-auto space-y-8">
+        <div className="w-full space-y-8">
 
             {/* Header */}
             <div className="space-y-2">
@@ -120,10 +120,10 @@ export function ServicesForm() {
                     {services.map((service) => (
                         <div
                             key={service.id}
-                            className={`border rounded-lg p-4 bg-card flex items-center justify-between group transition-colors ${editingId === service.id ? "border-primary ring-1 ring-primary" : ""}`}
+                            className={`border border-border/50 rounded-lg p-4 bg-card/50 backdrop-blur-sm flex items-center justify-between group transition-colors ${editingId === service.id ? "border-primary ring-1 ring-primary" : ""}`}
                         >
                             <div className="space-y-1">
-                                <h3 className="font-medium">{service.name}</h3>
+                                <h3 className="font-medium text-foreground">{service.name}</h3>
                                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                     <span className="flex items-center gap-1">
                                         <Clock className="h-3 w-3" /> {service.duration} min
@@ -155,17 +155,17 @@ export function ServicesForm() {
                     ))}
 
                     {services.length === 0 && !isAdding && (
-                        <div className="text-center py-8 border-2 border-dashed rounded-lg text-muted-foreground">
+                        <div className="text-center py-8 border-2 border-dashed border-border/50 rounded-lg text-muted-foreground">
                             No services added yet.
                         </div>
                     )}
                 </div>
 
                 {isAdding || services.length === 0 ? (
-                    <div className="border rounded-lg p-6 space-y-6 bg-muted/30">
+                    <div className="border border-border/50 rounded-lg p-6 space-y-6 bg-card/30 backdrop-blur-sm">
                         <div className="grid gap-4">
                             <div className="grid gap-2">
-                                <label className="text-sm font-medium">Service Name</label>
+                                <label className="text-sm font-medium text-foreground">Service Name</label>
                                 <Input
                                     placeholder="e.g. Initial Consultation"
                                     value={newService.name}
@@ -177,7 +177,7 @@ export function ServicesForm() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
-                                    <label className="text-sm font-medium">Duration</label>
+                                    <label className="text-sm font-medium text-foreground">Duration</label>
                                     <Select
                                         value={String(newService.duration)}
                                         onValueChange={(val) =>
@@ -197,7 +197,7 @@ export function ServicesForm() {
                                     </Select>
                                 </div>
                                 <div className="grid gap-2">
-                                    <label className="text-sm font-medium">Price ({currencySymbol})</label>
+                                    <label className="text-sm font-medium text-foreground">Price ({currencySymbol})</label>
                                     <div className="relative">
                                         <span className="absolute left-2.5 top-2.5 text-sm text-muted-foreground">
                                             {currencySymbol}
@@ -219,7 +219,7 @@ export function ServicesForm() {
                             </div>
 
                             <div className="grid gap-2">
-                                <label className="text-sm font-medium">Description (Optional)</label>
+                                <label className="text-sm font-medium text-foreground">Description (Optional)</label>
                                 <Input
                                     placeholder="Brief details about this service..."
                                     value={newService.description}
@@ -244,7 +244,7 @@ export function ServicesForm() {
                 ) : (
                     <Button
                         variant="outline"
-                        className="w-full border-dashed"
+                        className="w-full border-dashed text-foreground"
                         onClick={() => { resetForm(); setIsAdding(true); }}
                     >
                         <Plus className="h-4 w-4 mr-2" /> Add Another Service
