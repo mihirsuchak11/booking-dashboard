@@ -27,7 +27,7 @@ export function GoogleSignInButton() {
             <Button
                 type="submit"
                 variant="outline"
-                className="w-full h-10 gap-2"
+                className="w-full h-10 gap-2 text-foreground"
                 disabled={isLoading}
             >
                 {isLoading ? (

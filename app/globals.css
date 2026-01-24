@@ -89,8 +89,8 @@
   --card-foreground: oklch(0.985 0.003 290);
   --popover: oklch(0.185 0.014 290);
   --popover-foreground: oklch(0.985 0.003 290);
-  --primary: oklch(0.65 0.24 293);
-  --primary-foreground: oklch(0.145 0.012 290);
+  --primary: oklch(0.541 0.281 293);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.22 0.016 290);
   --secondary-foreground: oklch(0.985 0.003 290);
   --muted: oklch(0.22 0.016 290);
@@ -125,5 +125,30 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+  }
+  
+  /* Browser autofill styling - Light theme */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    -webkit-text-fill-color: #1a1a1a !important;
+    caret-color: #1a1a1a !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    outline: none !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  
+  /* Browser autofill styling - Dark theme */
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #0d0d12 inset !important;
+    -webkit-text-fill-color: #f5f5f5 !important;
+    caret-color: #f5f5f5 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    outline: none !important;
   }
 }
