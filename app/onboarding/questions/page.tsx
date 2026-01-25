@@ -504,18 +504,18 @@ export default function ReviewProfilePage() {
 
                     <div className="border-t p-4 md:p-6 shrink-0" style={{ borderColor: 'var(--auth-card-border)', backgroundColor: 'rgba(255,255,255,0.02)' }}>
                         {/* Mobile: Stack buttons vertically, Desktop: Side by side */}
-                        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
-                            {/* Left Button (Back) */}
+                        <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center gap-3">
+                            {/* Left Button (Back) - appears at bottom on mobile */}
                             <div className="w-full md:w-auto">
                                 {currentStep > 0 && currentStep < STEPS.length - 1 && (
-                                    <Button variant="outline" onClick={handleBack} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[100px]">
+                                    <Button variant="outline" onClick={handleBack} disabled={loading} size={BUTTON_SIZE} className="w-full md:w-auto md:min-w-[100px]">
                                         <ChevronLeft className="w-4 h-4 mr-2" /> Back
                                     </Button>
                                 )}
                             </div>
 
-                            {/* Right Button (Next/Finish) */}
-                            <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                            {/* Right Button (Next/Finish) - appears at top on mobile */}
+                            <div className="flex flex-col gap-3 md:flex-row w-full md:w-auto">
                                 {currentStep === 0 && (
                                     <Button size={BUTTON_SIZE} onClick={handleNext} className="w-full md:min-w-[140px]">
                                         Continue <ArrowRight className="w-4 h-4 ml-2" />
@@ -525,13 +525,13 @@ export default function ReviewProfilePage() {
                                 {/* Business Hours step - special handling for Edit Hours and Yes, Correct buttons */}
                                 {STEPS[currentStep].id === "hours" && !isHoursEditing && (
                                     <>
-                                        <Button variant="outline" onClick={() => setIsHoursEditing(true)} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
-                                            <Edit2 className="w-4 h-4 mr-2" />
-                                            Edit Hours
-                                        </Button>
-                                        <Button onClick={handleNext} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
+                                        <Button onClick={handleNext} disabled={loading} size={BUTTON_SIZE} className="w-full md:w-auto md:min-w-[140px] order-first md:order-last">
                                             <Check className="w-4 h-4 mr-2" />
                                             Yes, Correct
+                                        </Button>
+                                        <Button variant="outline" onClick={() => setIsHoursEditing(true)} disabled={loading} size={BUTTON_SIZE} className="w-full md:w-auto md:min-w-[140px]">
+                                            <Edit2 className="w-4 h-4 mr-2" />
+                                            Edit Hours
                                         </Button>
                                     </>
                                 )}
