@@ -98,7 +98,7 @@ export function BusinessSelectionDialog({
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent className="sm:max-w-2xl">
+            <DialogContent className="max-w-[calc(100%-1rem)] sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-primary" />
@@ -134,7 +134,7 @@ export function BusinessSelectionDialog({
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex flex-col max-h-[75vh]">
+                    <div className="flex flex-col max-h-[60vh] sm:max-h-[70vh] overflow-hidden">
                         {/* Business Cards - Scrollable */}
                         <div className="flex-1 space-y-3 overflow-y-auto pr-1 min-h-0">
                             {businesses.map((business) => (
@@ -148,7 +148,7 @@ export function BusinessSelectionDialog({
                         </div>
 
                         {/* Actions - Fixed at bottom */}
-                        <div className="flex flex-col gap-3 pt-4 mt-4 border-t flex-shrink-0 -mx-6 px-6">
+                        <div className="flex flex-col gap-3 pt-4 mt-4 border-t flex-shrink-0">
                             <ConfirmButton
                                 selectedBusiness={selectedBusiness}
                                 onClick={handleConfirm}
