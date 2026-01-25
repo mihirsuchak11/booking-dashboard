@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { signInWithGoogleAction } from "./actions";
 import { useState } from "react";
+import { BUTTON_SIZE } from "@/lib/ui-constants";
 
 /**
  * Google Sign-In Button Component
@@ -27,7 +28,8 @@ export function GoogleSignInButton() {
             <Button
                 type="submit"
                 variant="outline"
-                className="w-full h-10 gap-2 text-foreground"
+                size={BUTTON_SIZE}
+                className="w-full gap-2 text-foreground"
                 disabled={isLoading}
             >
                 {isLoading ? (

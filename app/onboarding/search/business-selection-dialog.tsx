@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BusinessCard } from "./business-card";
 import { BusinessSearchResult } from "../actions";
+import { BUTTON_SIZE } from "@/lib/ui-constants";
 
 interface BusinessSelectionDialogProps {
     open: boolean;
@@ -41,7 +42,7 @@ function ConfirmButton({
             onClick={onClick}
             disabled={!selectedBusiness || pending}
             className="w-full"
-            size="lg"
+            size={BUTTON_SIZE}
         >
             {pending ? (
                 <>
@@ -97,7 +98,7 @@ export function BusinessSelectionDialog({
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-primary" />
@@ -127,13 +128,13 @@ export function BusinessSelectionDialog({
                                 We couldn't find any businesses matching your search.
                             </p>
                         </div>
-                        <Button onClick={handleManualEntry} variant="outline">
+                        <Button onClick={handleManualEntry} variant="outline" size={BUTTON_SIZE}>
                             <PenLine className="w-4 h-4 mr-2" />
                             Enter Details Manually
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex flex-col max-h-[60vh]">
+                    <div className="flex flex-col max-h-[75vh]">
                         {/* Business Cards - Scrollable */}
                         <div className="flex-1 space-y-3 overflow-y-auto pr-1 min-h-0">
                             {businesses.map((business) => (
@@ -157,6 +158,7 @@ export function BusinessSelectionDialog({
                                 onClick={handleManualEntry}
                                 variant="ghost"
                                 className="w-full text-muted-foreground hover:text-foreground"
+                                size={BUTTON_SIZE}
                             >
                                 <PenLine className="w-4 h-4 mr-2" />
                                 My business isn't listed — enter manually

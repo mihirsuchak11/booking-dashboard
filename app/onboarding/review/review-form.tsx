@@ -8,6 +8,7 @@ import { Check, ChevronLeft, MapPin, Clock, Briefcase, Phone, Store, MessageCirc
 import { submitOnboardingAction } from "../actions";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/region-utils";
+import { BUTTON_SIZE } from "@/lib/ui-constants";
 
 export function ReviewForm() {
     const router = useRouter();
@@ -65,10 +66,10 @@ export function ReviewForm() {
     };
 
     return (
-        <div className="w-full space-y-8">
+        <div className="w-full flex flex-col h-full max-h-[calc(100dvh-11rem)] md:max-h-[calc(100vh-14rem)]">
 
             {/* Header */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-shrink-0 mb-6">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                     <Button variant="ghost" size="icon" className="h-6 w-6 -ml-2" onClick={handleBack}>
                         <ChevronLeft className="h-4 w-4" />
@@ -83,45 +84,61 @@ export function ReviewForm() {
                 </p>
             </div>
 
-            <div className="space-y-6">
+            {/* Scrollable Content Area */}
+            <div className="flex-1 overflow-y-auto min-h-0 space-y-6 pr-2 -mr-2">
+                <div className="space-y-6">
 
                 {/* Business Profile Summary */}
                 <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider">
-                            <Store className="h-4 w-4" /> Business Profile
+                    <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider min-w-0">
+                            <Store className="h-4 w-4 flex-shrink-0" /> 
+                            <span className="truncate">Business Profile</span>
                         </h3>
-                        <Button variant="ghost" size="sm" onClick={handleEditProfile} className="h-8 px-2 text-muted-foreground hover:text-foreground">
+                        <Button variant="ghost" size="sm" onClick={handleEditProfile} className="h-8 px-2 text-muted-foreground hover:text-foreground flex-shrink-0">
                             <Edit2 className="h-3 w-3 mr-2" /> Edit
                         </Button>
                     </div>
                     <div className="space-y-2 pl-6">
-                        <div className="font-medium text-lg text-foreground">{businessInfo.name}</div>
-                        <div className="grid grid-cols-2 gap-y-1 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2"><Briefcase className="h-3 w-3" /> {businessInfo.type === 'other' ? businessInfo.customBusinessType : businessInfo.type}</div>
-                            <div className="flex items-center gap-2"><MapPin className="h-3 w-3" /> {businessInfo.address || "No address"}</div>
-                            <div className="flex items-center gap-2"><Phone className="h-3 w-3" /> {businessInfo.phone || "No phone"}</div>
-                            <div className="flex items-center gap-2"><Clock className="h-3 w-3" /> {businessInfo.operatingHours?.filter(h => h.isOpen).length} days open</div>
+                        <div className="font-medium text-lg text-foreground break-words">{businessInfo.name}</div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <Briefcase className="h-3 w-3 flex-shrink-0" /> 
+                                <span className="truncate">{businessInfo.type === 'other' ? businessInfo.customBusinessType : businessInfo.type}</span>
+                            </div>
+                            <div className="flex items-center gap-2 min-w-0">
+                                <MapPin className="h-3 w-3 flex-shrink-0" /> 
+                                <span className="truncate">{businessInfo.address || "No address"}</span>
+                            </div>
+                            <div className="flex items-center gap-2 min-w-0">
+                                <Phone className="h-3 w-3 flex-shrink-0" /> 
+                                <span className="truncate">{businessInfo.phone || "No phone"}</span>
+                            </div>
+                            <div className="flex items-center gap-2 min-w-0">
+                                <Clock className="h-3 w-3 flex-shrink-0" /> 
+                                <span>{businessInfo.operatingHours?.filter(h => h.isOpen).length} days open</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Services Summary */}
                 <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider">
-                            <Package className="h-4 w-4" /> Services ({services.length})
+                    <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider min-w-0">
+                            <Package className="h-4 w-4 flex-shrink-0" /> 
+                            <span className="truncate">Services ({services.length})</span>
                         </h3>
-                        <Button variant="ghost" size="sm" onClick={handleEditServices} className="h-8 px-2 text-muted-foreground hover:text-foreground">
+                        <Button variant="ghost" size="sm" onClick={handleEditServices} className="h-8 px-2 text-muted-foreground hover:text-foreground flex-shrink-0">
                             <Edit2 className="h-3 w-3 mr-2" /> Edit
                         </Button>
                     </div>
                     <div className="pl-6 space-y-2">
                         {services.length > 0 ? (
                             services.slice(0, 3).map((s) => (
-                                <div key={s.id} className="flex justify-between text-sm">
-                                    <span className="text-foreground">{s.name}</span>
-                                    <span className="text-muted-foreground">{formatCurrency(s.price, businessInfo.region)}</span>
+                                <div key={s.id} className="flex justify-between gap-2 text-sm min-w-0">
+                                    <span className="text-foreground truncate min-w-0">{s.name}</span>
+                                    <span className="text-muted-foreground flex-shrink-0 ml-2">{formatCurrency(s.price, businessInfo.region)}</span>
                                 </div>
                             ))
                         ) : (
@@ -135,20 +152,21 @@ export function ReviewForm() {
 
                 {/* FAQs Summary */}
                 <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider">
-                            <MessageCircle className="h-4 w-4" /> FAQs ({faqs.length})
+                    <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider min-w-0">
+                            <MessageCircle className="h-4 w-4 flex-shrink-0" /> 
+                            <span className="truncate">FAQs ({faqs.length})</span>
                         </h3>
-                        <Button variant="ghost" size="sm" onClick={handleEditFAQs} className="h-8 px-2 text-muted-foreground hover:text-foreground">
+                        <Button variant="ghost" size="sm" onClick={handleEditFAQs} className="h-8 px-2 text-muted-foreground hover:text-foreground flex-shrink-0">
                             <Edit2 className="h-3 w-3 mr-2" /> Edit
                         </Button>
                     </div>
                     <div className="pl-6 space-y-2">
                         {faqs.length > 0 ? (
                             faqs.slice(0, 2).map((q) => (
-                                <div key={q.id} className="text-sm">
-                                    <div className="font-medium truncate text-foreground">{q.question}</div>
-                                    <div className="text-muted-foreground truncate text-xs">{q.answer}</div>
+                                <div key={q.id} className="text-sm min-w-0">
+                                    <div className="font-medium text-foreground break-words line-clamp-2">{q.question}</div>
+                                    <div className="text-muted-foreground text-xs break-words line-clamp-2 mt-1">{q.answer}</div>
                                 </div>
                             ))
                         ) : (
@@ -159,22 +177,23 @@ export function ReviewForm() {
                         )}
                     </div>
                 </div>
-
-
-                <div className="pt-4">
-                    <Button onClick={handleSubmit} disabled={submitting} className="w-full">
-                        {submitting ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Setting up...
-                            </>
-                        ) : (
-                            <>
-                                Finish Setup <Check className="ml-2 h-4 w-4" />
-                            </>
-                        )}
-                    </Button>
                 </div>
+            </div>
+
+            {/* Submit Button - Fixed at Bottom */}
+            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4">
+                <Button onClick={handleSubmit} disabled={submitting} className="w-full" size={BUTTON_SIZE}>
+                    {submitting ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Setting up...
+                        </>
+                    ) : (
+                        <>
+                            Finish Setup <Check className="ml-2 h-4 w-4" />
+                        </>
+                    )}
+                </Button>
             </div>
         </div>
     );

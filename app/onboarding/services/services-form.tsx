@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboarding, Service } from "@/contexts/onboarding-context";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { formatCurrency, getCurrencySymbol } from "@/lib/region-utils";
+import { BUTTON_SIZE } from "@/lib/ui-constants";
 
 const DURATION_OPTIONS = [
     { value: "15", label: "15 min" },
@@ -40,6 +41,23 @@ export function ServicesForm() {
         price: 0,
         description: "",
     });
+
+    // Ref for the form container to scroll into view
+    const formRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll to form when editing starts
+    useEffect(() => {
+        if (isAdding && formRef.current) {
+            // Small delay to ensure DOM is updated
+            setTimeout(() => {
+                formRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                });
+            }, 100);
+        }
+    }, [isAdding, editingId]);
 
     const handleSaveService = () => {
         if (!newService.name) return;
@@ -97,10 +115,10 @@ export function ServicesForm() {
     }
 
     return (
-        <div className="w-full space-y-8">
+        <div className="w-full flex flex-col h-full max-h-[calc(100dvh-11rem)] md:max-h-[calc(100vh-14rem)]">
 
             {/* Header */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-shrink-0 mb-6">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                     <Button variant="ghost" size="icon" className="h-6 w-6 -ml-2" onClick={handleBack}>
                         <ChevronLeft className="h-4 w-4" />
@@ -115,7 +133,8 @@ export function ServicesForm() {
                 </p>
             </div>
 
-            <div className="space-y-6">
+            {/* Scrollable Content Area */}
+            <div className="flex-1 overflow-y-auto min-h-0 space-y-6 pr-2 -mr-2">
                 <div className="space-y-4">
                     {services.map((service) => (
                         <div
@@ -162,7 +181,10 @@ export function ServicesForm() {
                 </div>
 
                 {isAdding || services.length === 0 ? (
-                    <div className="border border-border/50 rounded-lg p-6 space-y-6 bg-card/30 backdrop-blur-sm">
+                    <div 
+                        ref={formRef}
+                        className="border border-border/50 rounded-lg p-6 space-y-6 bg-card/30 backdrop-blur-sm"
+                    >
                         <div className="grid gap-4">
                             <div className="grid gap-2">
                                 <label className="text-sm font-medium text-foreground">Service Name</label>
@@ -246,25 +268,27 @@ export function ServicesForm() {
                         variant="outline"
                         className="w-full border-dashed text-foreground"
                         onClick={() => { resetForm(); setIsAdding(true); }}
+                        size={BUTTON_SIZE}
                     >
                         <Plus className="h-4 w-4 mr-2" /> Add Another Service
                     </Button>
                 )}
+            </div>
 
-                <div className="pt-4">
-                    {!isAdding && services.length > 0 && (
-                        <Button onClick={handleContinue} className="w-full">
-                            Continue <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
-                    )}
-                    {/* If adding or empty, we generally block continue, or user must cancel add first */}
-                    {isAdding && services.length > 0 && (
-                        <Button disabled className="w-full">Continue <ArrowRight className="h-4 w-4 ml-2" /></Button>
-                    )}
-                    {services.length === 0 && !isAdding && (
-                        <Button disabled className="w-full">Continue <ArrowRight className="h-4 w-4 ml-2" /></Button>
-                    )}
-                </div>
+            {/* Continue Button - Fixed at Bottom */}
+            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4">
+                {!isAdding && services.length > 0 && (
+                    <Button onClick={handleContinue} className="w-full" size={BUTTON_SIZE}>
+                        Continue <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                )}
+                {/* If adding or empty, we generally block continue, or user must cancel add first */}
+                {isAdding && services.length > 0 && (
+                    <Button disabled className="w-full" size={BUTTON_SIZE}>Continue <ArrowRight className="h-4 w-4 ml-2" /></Button>
+                )}
+                {services.length === 0 && !isAdding && (
+                    <Button disabled className="w-full" size={BUTTON_SIZE}>Continue <ArrowRight className="h-4 w-4 ml-2" /></Button>
+                )}
             </div>
         </div>
     );

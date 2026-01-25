@@ -26,7 +26,7 @@ interface BrandedBackgroundProps {
 export function BrandedBackground({ children }: BrandedBackgroundProps) {
   return (
     <div 
-      className="dark min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden"
+      className="dark min-h-screen flex flex-col px-4 pt-4 relative overflow-hidden"
       style={{ background: `linear-gradient(to bottom, var(--auth-bg-from), var(--auth-bg-via), var(--auth-bg-to))` }}
     >
       {/* Premium Background Effects */}
@@ -59,11 +59,19 @@ export function BrandedBackground({ children }: BrandedBackgroundProps) {
         style={{ background: `radial-gradient(circle at center, var(--auth-glow-secondary), transparent 60%)` }}
       />
 
-      {/* Page Content */}
-      {children}
+      {/* Content Area - Fills available height excluding footer */}
+      <div 
+        className="flex-1 flex items-center justify-center"
+        style={{ minHeight: 'calc(100vh - 16px - 1.5rem - 16px - 8px)' }}
+      >
+        {children}
+      </div>
 
-      {/* Footer */}
-      <div className="relative mt-8 text-center text-xs" style={{ color: `var(--auth-text-muted)` }}>
+      {/* Footer - Always at bottom with margin-top auto and 16px gap */}
+      <div 
+        className="mt-auto pt-4 mb-2 text-center text-xs" 
+        style={{ color: `var(--auth-text-muted)` }}
+      >
         © {new Date().getFullYear()} AI tele caller. All rights reserved.
       </div>
     </div>

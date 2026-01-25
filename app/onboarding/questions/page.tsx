@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { saveKnowledgeBase, submitOnboardingAction } from "../actions";
 import { BrandedBackground } from "@/components/branded-background";
 import { BrandedCard } from "@/components/branded-card";
+import { INPUT_HEIGHT, BUTTON_SIZE } from "@/lib/ui-constants";
+import { cn } from "@/lib/utils";
 
 // Types matching our schema
 interface FAQ {
@@ -240,16 +242,16 @@ export default function ReviewProfilePage() {
 
             case "info":
                 return (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                         <div className="space-y-2 border-b pb-4">
                             <h2 className="text-2xl font-semibold tracking-tight">Business Information</h2>
                             <p className="text-base text-muted-foreground">Review the details we found from your online presence.</p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-3">
                                 <Label className="text-sm">Business Name</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.name || ""} disabled className="bg-muted/30 border-muted h-9" />
+                                    <Input value={data.businessInfo.name || ""} disabled className={cn("bg-muted/30 border-muted", INPUT_HEIGHT)} />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
                                         <MapPin className="w-3 h-3" /> Google
                                     </div>
@@ -258,7 +260,7 @@ export default function ReviewProfilePage() {
                             <div className="space-y-3">
                                 <Label className="text-sm">Category</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.category || ""} disabled className="bg-muted/30 border-muted h-9" />
+                                    <Input value={data.businessInfo.category || ""} disabled className={cn("bg-muted/30 border-muted", INPUT_HEIGHT)} />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/50 text-xs font-medium text-muted-foreground border shadow-sm">
                                         <Globe className="w-3 h-3" /> Google
                                     </div>
@@ -267,7 +269,7 @@ export default function ReviewProfilePage() {
                             <div className="space-y-3">
                                 <Label className="text-sm">Phone</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.phone || ""} onChange={e => updateBusinessInfo("phone", e.target.value)} className="h-9" />
+                                    <Input value={data.businessInfo.phone || ""} onChange={e => updateBusinessInfo("phone", e.target.value)} className={INPUT_HEIGHT} />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
                                         <Phone className="w-3 h-3" /> Google
                                     </div>
@@ -276,7 +278,7 @@ export default function ReviewProfilePage() {
                             <div className="space-y-3">
                                 <Label className="text-sm">Address</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.address || ""} onChange={e => updateBusinessInfo("address", e.target.value)} className="h-9" />
+                                    <Input value={data.businessInfo.address || ""} onChange={e => updateBusinessInfo("address", e.target.value)} className={INPUT_HEIGHT} />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
                                         <MapPin className="w-3 h-3" /> Google
                                     </div>
@@ -285,7 +287,7 @@ export default function ReviewProfilePage() {
                             <div className="space-y-3">
                                 <Label className="text-sm">Website</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.website || ""} onChange={e => updateBusinessInfo("website", e.target.value)} className="h-9" />
+                                    <Input value={data.businessInfo.website || ""} onChange={e => updateBusinessInfo("website", e.target.value)} className={INPUT_HEIGHT} />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 text-xs font-medium text-blue-600 border border-blue-100 shadow-sm">
                                         <Globe className="w-3 h-3" /> Google
                                     </div>
@@ -294,7 +296,7 @@ export default function ReviewProfilePage() {
                             <div className="space-y-3">
                                 <Label className="text-sm">Email</Label>
                                 <div className="relative">
-                                    <Input value={data.businessInfo.email || ""} onChange={e => updateBusinessInfo("email", e.target.value)} className="h-9" />
+                                    <Input value={data.businessInfo.email || ""} onChange={e => updateBusinessInfo("email", e.target.value)} className={INPUT_HEIGHT} />
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-50 text-xs font-medium text-orange-600 border border-orange-100 shadow-sm">
                                         <Mail className="w-3 h-3" /> Website
                                     </div>
@@ -315,39 +317,30 @@ export default function ReviewProfilePage() {
 
             case "hours":
                 return (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                         <div className="space-y-2 border-b pb-4">
                             <h2 className="text-2xl font-semibold tracking-tight">Business Hours</h2>
                             <p className="text-base text-muted-foreground">When are you open for customers?</p>
                         </div>
 
                         {!isHoursEditing ? (
-                            <div className="border border-muted/40 rounded-3xl p-12 flex flex-col items-center justify-center space-y-8 text-center bg-muted/5 shadow-inner">
+                            <div className="border border-muted/40 rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center space-y-6 text-center bg-muted/5 shadow-inner">
                                 <h3 className="text-xl font-medium tracking-tight">Are these your business hours?</h3>
 
-                                <div className="px-10 py-6 bg-white dark:bg-card border rounded-2xl shadow-sm">
-                                    <span className="text-4xl font-bold tracking-tight text-foreground">
-                                        Mon–Sat · {data.hours["monday"]?.open || "09:00"} – {data.hours["monday"]?.close || "17:00"}
-                                    </span>
+                                <div className="px-6 md:px-8 py-4 md:py-6 bg-white dark:bg-card border rounded-2xl shadow-sm">
+                                    <div className="flex flex-col md:flex-row md:items-center md:gap-2 text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+                                        <span>Mon–Sat</span>
+                                        <span className="hidden md:inline"> · </span>
+                                        <span className="text-2xl md:text-4xl">{data.hours["monday"]?.open || "09:00"} – {data.hours["monday"]?.close || "17:00"}</span>
+                                    </div>
                                 </div>
 
                                 <p className="text-base text-muted-foreground max-w-sm">
                                     We'll use this detailed schedule for booking appointments.
                                 </p>
-
-                                <div className="flex gap-4 pt-4">
-                                    <Button variant="outline" size="lg" className="min-w-[140px] h-12 text-base" onClick={() => setIsHoursEditing(true)}>
-                                        <Edit2 className="w-4 h-4 mr-2" />
-                                        Edit Hours
-                                    </Button>
-                                    <Button onClick={handleNext} size="lg" className="min-w-[160px] h-12 text-base bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black shadow-md hover:shadow-lg transition-all">
-                                        <Check className="w-5 h-5 mr-2" />
-                                        Yes, Correct
-                                    </Button>
-                                </div>
                             </div>
                         ) : (
-                            <div className="space-y-4 max-w-3xl mx-auto">
+                            <div className="space-y-4">
                                 <div className="bg-card border rounded-xl overflow-hidden shadow-sm">
                                     {dayOrder.map((day, index) => {
                                         const dayData = data.hours[day] || { isOpen: false, open: "09:00", close: "17:00" };
@@ -359,9 +352,9 @@ export default function ReviewProfilePage() {
                                                 </div>
                                                 {dayData.isOpen ? (
                                                     <div className="flex items-center space-x-3">
-                                                        <Input type="time" className="w-36 h-9 text-center" value={dayData.open} onChange={e => updateHours(day, "open", e.target.value)} />
+                                                        <Input type="time" className={cn("w-36 text-center", INPUT_HEIGHT)} value={dayData.open} onChange={e => updateHours(day, "open", e.target.value)} />
                                                         <span className="text-muted-foreground font-medium">to</span>
-                                                        <Input type="time" className="w-36 h-9 text-center" value={dayData.close} onChange={e => updateHours(day, "close", e.target.value)} />
+                                                        <Input type="time" className={cn("w-36 text-center", INPUT_HEIGHT)} value={dayData.close} onChange={e => updateHours(day, "close", e.target.value)} />
                                                     </div>
                                                 ) : (
                                                     <span className="text-muted-foreground italic flex-1 text-center bg-muted/20 py-2 rounded-md mx-4">Closed</span>
@@ -370,7 +363,6 @@ export default function ReviewProfilePage() {
                                         );
                                     })}
                                 </div>
-                                <Button variant="ghost" size="lg" className="w-full text-base" onClick={() => setIsHoursEditing(false)}>Done Editing</Button>
                             </div>
                         )}
                     </div>
@@ -378,7 +370,7 @@ export default function ReviewProfilePage() {
 
             case "services":
                 return (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                         <div className="space-y-2 border-b pb-4">
                             <h2 className="text-2xl font-semibold tracking-tight">Services</h2>
                             <p className="text-base text-muted-foreground">Verify your services. Price and duration are optional.</p>
@@ -389,25 +381,25 @@ export default function ReviewProfilePage() {
                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1">
                                         <div className="md:col-span-2 space-y-3">
                                             <Label className="text-sm">Service Name</Label>
-                                            <Input className="h-9 border-muted" value={service.name} onChange={e => updateService(idx, "name", e.target.value)} />
+                                            <Input className={cn("border-muted", INPUT_HEIGHT)} value={service.name} onChange={e => updateService(idx, "name", e.target.value)} />
                                         </div>
                                         <div className="space-y-3">
                                             <Label className="text-sm">Price <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
                                             <div className="relative">
                                                 <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                                <Input type="number" className="pl-9 h-9 border-muted" placeholder="Ask client" value={service.price || ""} onChange={e => updateService(idx, "price", parseFloat(e.target.value))} />
+                                                <Input type="number" className={cn("pl-9 border-muted", INPUT_HEIGHT)} placeholder="Ask client" value={service.price || ""} onChange={e => updateService(idx, "price", parseFloat(e.target.value))} />
                                             </div>
                                         </div>
                                         <div className="space-y-3">
                                             <Label className="text-sm">Duration <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span></Label>
                                             <div className="relative">
                                                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                                <Input type="number" className="pl-9 h-9 border-muted" placeholder="Variable" value={service.duration || ""} onChange={e => updateService(idx, "duration", parseFloat(e.target.value))} />
+                                                <Input type="number" className={cn("pl-9 border-muted", INPUT_HEIGHT)} placeholder="Variable" value={service.duration || ""} onChange={e => updateService(idx, "duration", parseFloat(e.target.value))} />
                                             </div>
                                         </div>
                                         <div className="md:col-span-4 space-y-3">
                                             <Label className="text-sm">Description</Label>
-                                            <Input className="h-9 border-muted" value={service.description} onChange={e => updateService(idx, "description", e.target.value)} />
+                                            <Input className={cn("border-muted", INPUT_HEIGHT)} value={service.description} onChange={e => updateService(idx, "description", e.target.value)} />
                                         </div>
                                     </div>
                                     <Button variant="ghost" size="icon" className="text-destructive h-10 w-10 bg-destructive/5 hover:bg-destructive/10" onClick={() => removeService(idx)}>
@@ -415,7 +407,7 @@ export default function ReviewProfilePage() {
                                     </Button>
                                 </div>
                             ))}
-                            <Button variant="outline" size="lg" onClick={addService} className="w-full border-dashed h-12 text-base hover:bg-muted/50">
+                            <Button variant="outline" size={BUTTON_SIZE} onClick={addService} className="w-full border-dashed hover:bg-muted/50">
                                 <Plus className="mr-2 h-5 w-5" /> Add Service
                             </Button>
                         </div>
@@ -424,7 +416,7 @@ export default function ReviewProfilePage() {
 
             case "faqs":
                 return (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                         <div className="space-y-2 border-b pb-4">
                             <h2 className="text-2xl font-semibold tracking-tight">Frequently Asked Questions</h2>
                             <p className="text-base text-muted-foreground">Review answers or defer them to your onboarding call.</p>
@@ -493,9 +485,9 @@ export default function ReviewProfilePage() {
 
     return (
         <BrandedBackground>
-            <div className="w-full max-w-6xl px-6">
+            <div className="w-full max-w-6xl px-3 md:px-4 flex flex-col flex-1 min-h-0 overflow-hidden max-h-[calc(100vh-5rem)]">
                 {/* Upper Progress Bar Section */}
-                <div className="mb-8 space-y-3 max-w-3xl mx-auto">
+                <div className="mb-8 space-y-3 w-full max-w-[80%] mx-auto shrink-0">
                     <div className="flex justify-between text-sm font-medium" style={{ color: 'var(--auth-text-secondary)' }}>
                         <span>Step {currentGlobalStep} of {totalSteps}</span>
                         <span>{Math.round(progressValue)}% Completed</span>
@@ -503,55 +495,73 @@ export default function ReviewProfilePage() {
                     <Progress value={progressValue} className="h-2.5" />
                 </div>
 
-                <BrandedCard className="min-h-[600px] flex flex-col">
-                    <div className="flex-1 pt-6 px-8 pb-8">
-                        {renderStepContent()}
+                <BrandedCard className="flex-1 flex flex-col min-h-0 min-h-[450px] overflow-hidden">
+                    <div className="flex-1 pt-6 px-4 md:px-6 pb-8 overflow-hidden flex flex-col min-h-0">
+                        <div className="flex-1 overflow-y-auto min-h-0">
+                            {renderStepContent()}
+                        </div>
                     </div>
 
-                    <div className="flex justify-between items-center border-t p-6 mt-auto" style={{ borderColor: 'var(--auth-card-border)', backgroundColor: 'rgba(255,255,255,0.02)' }}>
-                        {/* Left Button (Back) */}
-                        <div>
-                            {currentStep > 0 && currentStep < STEPS.length - 1 && (
-                                <Button variant="outline" onClick={handleBack} disabled={loading} className="min-w-[100px]">
-                                    <ChevronLeft className="w-4 h-4 mr-2" /> Back
-                                </Button>
-                            )}
-                        </div>
+                    <div className="border-t p-4 md:p-6 shrink-0" style={{ borderColor: 'var(--auth-card-border)', backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                        {/* Mobile: Stack buttons vertically, Desktop: Side by side */}
+                        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+                            {/* Left Button (Back) */}
+                            <div className="w-full md:w-auto">
+                                {currentStep > 0 && currentStep < STEPS.length - 1 && (
+                                    <Button variant="outline" onClick={handleBack} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[100px]">
+                                        <ChevronLeft className="w-4 h-4 mr-2" /> Back
+                                    </Button>
+                                )}
+                            </div>
 
-                        {/* Right Button (Next/Finish) */}
-                        <div>
-                            {currentStep === 0 && (
-                                <Button size="lg" onClick={handleNext} className="min-w-[140px]">
-                                    Continue <ArrowRight className="w-4 h-4 ml-2" />
-                                </Button>
-                            )}
-                            {/* Special case: Hours step has its own main action button inside the card, but we keep Next here for consistency fallback or if editing is done */}
-                            {currentStep > 0 && currentStep < STEPS.length - 2 && STEPS[currentStep].id !== "hours" && (
-                                <Button onClick={handleNext} disabled={loading} className="min-w-[140px]">
-                                    Next <ChevronRight className="w-4 h-4 ml-2" />
-                                </Button>
-                            )}
-                            {/* For Hours step, we hide the default Next button when in the 'Preview' mode because the big 'Yes, Correct' button does the job. 
-                                If editing, we might want it or rely on 'Done Editing'. Let's show it only if Editing, or relying on the big button. 
-                                Actually, standard UX suggests keeping the footer consistent. 
-                                But the design shows 'Yes Correct' in the card. Let's hide the footer Next button for Hours step to avoid confusion.
-                            */}
-                            {STEPS[currentStep].id === "hours" && isHoursEditing && (
-                                <Button onClick={() => setIsHoursEditing(false)} variant="ghost">Save View</Button>
-                            )}
+                            {/* Right Button (Next/Finish) */}
+                            <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                                {currentStep === 0 && (
+                                    <Button size={BUTTON_SIZE} onClick={handleNext} className="w-full md:min-w-[140px]">
+                                        Continue <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                )}
+                                
+                                {/* Business Hours step - special handling for Edit Hours and Yes, Correct buttons */}
+                                {STEPS[currentStep].id === "hours" && !isHoursEditing && (
+                                    <>
+                                        <Button variant="outline" onClick={() => setIsHoursEditing(true)} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
+                                            <Edit2 className="w-4 h-4 mr-2" />
+                                            Edit Hours
+                                        </Button>
+                                        <Button onClick={handleNext} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
+                                            <Check className="w-4 h-4 mr-2" />
+                                            Yes, Correct
+                                        </Button>
+                                    </>
+                                )}
+                                
+                                {STEPS[currentStep].id === "hours" && isHoursEditing && (
+                                    <Button onClick={() => setIsHoursEditing(false)} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
+                                        Done Editing
+                                    </Button>
+                                )}
 
-                            {currentStep === STEPS.length - 2 && (
-                                <Button onClick={handleSubmit} disabled={loading} className="min-w-[140px]">
-                                    {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                                    Finish & Save
-                                </Button>
-                            )}
+                                {/* Other steps */}
+                                {currentStep > 0 && currentStep < STEPS.length - 2 && STEPS[currentStep].id !== "hours" && (
+                                    <Button onClick={handleNext} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
+                                        Next <ChevronRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                )}
 
-                            {currentStep === STEPS.length - 1 && (
-                                <Button onClick={() => router.push("/dashboard")} size="lg" className="min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
-                                    Go to Dashboard <ArrowRight className="w-4 h-4 ml-2" />
-                                </Button>
-                            )}
+                                {currentStep === STEPS.length - 2 && (
+                                    <Button onClick={handleSubmit} disabled={loading} size={BUTTON_SIZE} className="w-full md:min-w-[140px]">
+                                        {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                                        Finish & Save
+                                    </Button>
+                                )}
+
+                                {currentStep === STEPS.length - 1 && (
+                                    <Button onClick={() => router.push("/dashboard")} size={BUTTON_SIZE} className="w-full md:min-w-[160px] bg-green-600 hover:bg-green-700 text-white">
+                                        Go to Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </BrandedCard>

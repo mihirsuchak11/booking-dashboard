@@ -10,10 +10,10 @@ export default function OnboardingFAQsPage() {
     <BrandedBackground>
       <BrandedCard className="grid lg:grid-cols-2 min-h-[600px]">
         {/* Left Side - Form */}
-        <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
-          <div className="w-full max-w-lg mx-auto">
+        <div className="flex flex-col p-6 md:p-10 lg:p-12">
+          <div className="w-full max-w-lg mx-auto flex flex-col h-full">
             {/* Logo/Brand */}
-            <div className="text-xl font-semibold text-foreground mb-6">AI tele caller</div>
+            <div className="text-xl font-semibold text-foreground mb-6 flex-shrink-0">AI tele caller</div>
             <FAQsForm />
           </div>
         </div>
