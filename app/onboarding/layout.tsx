@@ -7,7 +7,6 @@ import "@/app/styles/branded-layout.css";
 
 const STEPS = [
   { path: "/onboarding/search", label: "Search" },
-  { path: "/onboarding/questions", label: "Review" },
 ];
 
 export default function OnboardingLayout({

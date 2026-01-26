@@ -52,7 +52,8 @@ export function ReviewForm() {
                 // Clear onboarding session data
                 sessionStorage.removeItem("onboarding_state");
                 sessionStorage.removeItem("onboarding_state_v2");
-                sessionStorage.removeItem("onboarding_generated_full_profile");
+                // Removed while removing onboarding questions page - this sessionStorage key was only used by /onboarding/questions route
+                // sessionStorage.removeItem("onboarding_generated_full_profile");
                 router.push("/dashboard"); // Redirect to dashboard home
             } else {
                 toast.error(result.error || "Failed to save business details.");
