@@ -341,17 +341,6 @@ export function SearchForm() {
     return (
         <>
             <form action={searchAction} className="w-full max-w-sm mx-auto space-y-8">
-                {/* Steps / Header */}
-                <div className="space-y-2">
-                    <span className="text-sm font-medium text-muted-foreground">Step 1/4</span>
-                    <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                        Find Your Business
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                        Enter your business name and location to get started.
-                    </p>
-                </div>
-
                 {/* Form Fields */}
                 <div className="space-y-5">
 

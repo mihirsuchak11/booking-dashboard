@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -11,22 +10,16 @@ import { SettingsTabs } from "@/components/settings/settings-tabs";
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
+  // Try to get user data if authenticated, but don't require it
   const userId = await getAuthenticatedUserId();
+  let businessId: string | null = null;
+  let data: Awaited<ReturnType<typeof getBusinessWithConfig>> = null;
 
-  if (!userId) {
-    redirect("/signin");
-  }
-
-  const businessId = await getBusinessIdForUser(userId);
-
-  if (!businessId) {
-    redirect("/signin");
-  }
-
-  const data = await getBusinessWithConfig(businessId);
-
-  if (!data) {
-    redirect("/signin");
+  if (userId) {
+    businessId = await getBusinessIdForUser(userId);
+    if (businessId) {
+      data = await getBusinessWithConfig(businessId);
+    }
   }
 
   return (
@@ -34,7 +27,7 @@ export default async function SettingsPage() {
       <DashboardSidebar />
       <div className="h-svh overflow-hidden lg:p-2 w-full">
         <div className="lg:border lg:rounded-md overflow-hidden flex flex-col items-center justify-start bg-container h-full w-full bg-background">
-          <DashboardHeader businessName={data.business.name} />
+          <DashboardHeader businessName={data?.business.name} />
 
           <div className="w-full overflow-y-auto overflow-x-hidden p-4 h-full">
             <div className="mx-auto w-full max-w-4xl space-y-6">
@@ -45,11 +38,17 @@ export default async function SettingsPage() {
                 </p>
               </div>
 
-              <SettingsTabs
-                businessId={businessId}
-                business={data.business}
-                config={data.config}
-              />
+              {data && businessId ? (
+                <SettingsTabs
+                  businessId={businessId}
+                  business={data.business}
+                  config={data.config}
+                />
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Please sign in to access settings.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

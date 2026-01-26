@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/contexts/onboarding-context";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronLeft, MapPin, Clock, Briefcase, Phone, Store, MessageCircle, Package, Loader2, Edit2 } from "lucide-react";
+import { Check, MapPin, Clock, Briefcase, Phone, Store, MessageCircle, Package, Loader2, Edit2, ChevronLeft } from "lucide-react";
 import { submitOnboardingAction } from "../actions";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/region-utils";
@@ -15,10 +15,6 @@ export function ReviewForm() {
     const { state } = useOnboarding();
     const { businessInfo, services, faqs } = state;
     const [submitting, setSubmitting] = useState(false);
-
-    const handleBack = () => {
-        router.back();
-    };
 
     const handleEditProfile = () => router.push("/onboarding/search");
     const handleEditServices = () => router.push("/onboarding/services");
@@ -67,27 +63,12 @@ export function ReviewForm() {
     };
 
     return (
-        <div className="w-full flex flex-col h-full max-h-[calc(100dvh-11rem)] md:max-h-[calc(100vh-14rem)]">
-
-            {/* Header */}
-            <div className="space-y-2 flex-shrink-0 mb-6">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                    <Button variant="ghost" size="icon" className="h-6 w-6 -ml-2" onClick={handleBack}>
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <span className="text-sm font-medium">Step 4/4</span>
-                </div>
-                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                    Review & Finish
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                    Check your details before creating your AI agent.
-                </p>
-            </div>
+        <>
+            <div className="w-full flex flex-col h-full max-h-[calc(100dvh-226px)] md:max-h-[calc(100dvh-240px)] lg:max-h-[calc(100dvh-158px)]">
 
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto min-h-0 space-y-6 pr-2 -mr-2">
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                 {/* Business Profile Summary */}
                 <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
@@ -124,7 +105,7 @@ export function ReviewForm() {
                 </div>
 
                 {/* Services Summary */}
-                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
+                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm lg:col-span-1">
                     <div className="flex items-center justify-between gap-2">
                         <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider min-w-0">
                             <Package className="h-4 w-4 flex-shrink-0" /> 
@@ -152,7 +133,7 @@ export function ReviewForm() {
                 </div>
 
                 {/* FAQs Summary */}
-                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm">
+                <div className="border border-border/50 rounded-lg p-4 space-y-3 bg-card/50 backdrop-blur-sm lg:col-span-2">
                     <div className="flex items-center justify-between gap-2">
                         <h3 className="font-medium flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wider min-w-0">
                             <MessageCircle className="h-4 w-4 flex-shrink-0" /> 
@@ -181,21 +162,40 @@ export function ReviewForm() {
                 </div>
             </div>
 
-            {/* Submit Button - Fixed at Bottom */}
-            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4">
-                <Button onClick={handleSubmit} disabled={submitting} className="w-full" size={BUTTON_SIZE}>
-                    {submitting ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Setting up...
-                        </>
-                    ) : (
-                        <>
-                            Finish Setup <Check className="ml-2 h-4 w-4" />
-                        </>
-                    )}
-                </Button>
+            {/* Fixed Action Buttons at Bottom */}
+            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4 overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-end lg:justify-between gap-3 min-w-0 w-full">
+                    {/* Back Button - Left Side (Hidden on mobile, visible on large screens) */}
+                    <Button
+                        variant="ghost"
+                        onClick={() => router.back()}
+                        size={BUTTON_SIZE}
+                        className="hidden lg:flex flex-shrink-0"
+                    >
+                        <ChevronLeft className="h-4 w-4 mr-2" /> Back
+                    </Button>
+
+                    {/* Finish Setup Button - Right Side */}
+                    <Button 
+                        onClick={handleSubmit} 
+                        disabled={submitting} 
+                        className="w-full sm:flex-shrink-0 sm:max-w-[180px] min-w-0" 
+                        size={BUTTON_SIZE}
+                    >
+                        {submitting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Setting up...
+                            </>
+                        ) : (
+                            <>
+                                Finish Setup <Check className="ml-2 h-4 w-4" />
+                            </>
+                        )}
+                    </Button>
+                </div>
             </div>
         </div>
+        </>
     );
 }

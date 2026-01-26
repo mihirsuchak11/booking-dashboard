@@ -1,30 +1,68 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { BrandedBackground } from "@/components/branded-background";
 import { BrandedCard } from "@/components/branded-card";
-import { RightPanelBackground } from "@/components/right-panel-background";
-import { RightPanelIconCard } from "@/components/right-panel-icon-card";
+import { OnboardingStepsPanel } from "@/components/onboarding/onboarding-steps-panel";
 import { FAQsForm } from "./faqs-form";
-import { MessageSquareText } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ONBOARDING_STEPS } from "../layout";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 export default function OnboardingFAQsPage() {
+  const pathname = usePathname();
+  const router = useRouter();
+  
   return (
     <BrandedBackground>
-      <BrandedCard className="grid lg:grid-cols-2 min-h-[600px]">
-        {/* Left Side - Form */}
-        <div className="flex flex-col p-6 md:p-10 lg:p-12">
-          <div className="w-full max-w-lg mx-auto flex flex-col h-full">
-            {/* Logo/Brand */}
-            <div className="text-xl font-semibold text-foreground mb-6 flex-shrink-0">AI tele caller</div>
+      <BrandedCard className="grid lg:grid-cols-[1.5fr_4fr] h-full max-w-[1400px] w-full max-h-full">
+        {/* Left Side: All Steps */}
+        <OnboardingStepsPanel
+          steps={ONBOARDING_STEPS}
+          currentPath={pathname}
+        />
+
+        {/* Right Side - Form */}
+        <div className="flex flex-col items-center pt-6 px-6 md:pt-10 md:px-10 lg:pt-12 lg:px-12 pb-0">
+          {/* Mobile Header - Only visible on mobile */}
+          <div className="w-full max-w-4xl lg:hidden mb-6">
+            {/* Back Button and Heading in same row */}
+            <div className="flex items-center gap-4 mb-4">
+              <Button
+                variant="ghost"
+                onClick={() => router.back()}
+                size="sm"
+                className="text-muted-foreground hover:text-foreground flex-shrink-0"
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" /> Back
+              </Button>
+              <h1 className="text-xl font-bold" style={{ color: `var(--auth-text-primary)` }}>
+                AI Tele Caller
+              </h1>
+            </div>
+            {(() => {
+              const currentStepIndex = ONBOARDING_STEPS.findIndex(step => step.path === pathname);
+              const currentStep = currentStepIndex >= 0 ? ONBOARDING_STEPS[currentStepIndex] : null;
+              if (currentStep) {
+                return (
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium" style={{ color: `var(--auth-text-muted)` }}>
+                      Step {currentStepIndex + 1} of {ONBOARDING_STEPS.length}
+                    </div>
+                    <h2 className="text-lg font-semibold" style={{ color: `var(--auth-text-primary)` }}>
+                      {currentStep.title}
+                    </h2>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+          </div>
+          <div className="w-full max-w-4xl flex flex-col h-full min-h-0">
             <FAQsForm />
           </div>
         </div>
-
-        {/* Right Column: Visual */}
-        <RightPanelBackground>
-          <RightPanelIconCard 
-            icon={MessageSquareText} 
-            description="Train your AI agent to answer common customer inquiries instantly" 
-          />
-        </RightPanelBackground>
       </BrandedCard>
     </BrandedBackground>
   );

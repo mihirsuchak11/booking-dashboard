@@ -41,18 +41,20 @@ function ConfirmButton({
         <Button
             onClick={onClick}
             disabled={!selectedBusiness || pending}
-            className="w-full"
+            className="w-full sm:flex-1 sm:min-w-[120px]"
             size={BUTTON_SIZE}
         >
             {pending ? (
                 <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin flex-shrink-0" />
+                    <span className="truncate">Processing...</span>
                 </>
             ) : selectedBusiness ? (
-                <>Select {selectedBusiness.name.length > 25 ? selectedBusiness.name.slice(0, 25) + "..." : selectedBusiness.name}</>
+                <span className="truncate">
+                    Select {selectedBusiness.name.length > 20 ? selectedBusiness.name.slice(0, 20) + "..." : selectedBusiness.name}
+                </span>
             ) : (
-                "Select a business to continue"
+                <span className="truncate">Select a business to continue</span>
             )}
         </Button>
     );
@@ -148,21 +150,21 @@ export function BusinessSelectionDialog({
                         </div>
 
                         {/* Actions - Fixed at bottom */}
-                        <div className="flex flex-col gap-3 pt-4 mt-4 border-t flex-shrink-0">
+                        <div className="flex flex-col sm:flex-row gap-3 pt-4 mt-4 border-t flex-shrink-0">
+                            <Button
+                                onClick={handleManualEntry}
+                                variant="ghost"
+                                className="w-full sm:w-auto sm:flex-shrink-0 text-muted-foreground hover:text-foreground"
+                                size={BUTTON_SIZE}
+                            >
+                                <PenLine className="w-4 h-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">My business isn't listed — enter manually</span>
+                            </Button>
+
                             <ConfirmButton
                                 selectedBusiness={selectedBusiness}
                                 onClick={handleConfirm}
                             />
-
-                            <Button
-                                onClick={handleManualEntry}
-                                variant="ghost"
-                                className="w-full text-muted-foreground hover:text-foreground"
-                                size={BUTTON_SIZE}
-                            >
-                                <PenLine className="w-4 h-4 mr-2" />
-                                My business isn't listed — enter manually
-                            </Button>
                         </div>
                     </div>
                 )}
