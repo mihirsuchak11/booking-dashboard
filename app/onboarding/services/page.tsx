@@ -37,7 +37,7 @@ export default function OnboardingServicesPage() {
               >
                 <ChevronLeft className="h-4 w-4 mr-2" /> Back
               </Button>
-              <h1 className="text-xl font-bold" style={{ color: `var(--auth-text-primary)` }}>
+              <h1 className="text-xl font-bold text-[var(--auth-text-primary)]">
                 AI Tele Caller
               </h1>
             </div>
@@ -47,10 +47,10 @@ export default function OnboardingServicesPage() {
               if (currentStep) {
                 return (
                   <div className="space-y-2">
-                    <div className="text-sm font-medium" style={{ color: `var(--auth-text-muted)` }}>
+                    <div className="text-sm font-medium text-[var(--auth-text-muted)]">
                       Step {currentStepIndex + 1} of {ONBOARDING_STEPS.length}
                     </div>
-                    <h2 className="text-lg font-semibold" style={{ color: `var(--auth-text-primary)` }}>
+                    <h2 className="text-lg font-semibold text-[var(--auth-text-primary)]">
                       {currentStep.title}
                     </h2>
                   </div>

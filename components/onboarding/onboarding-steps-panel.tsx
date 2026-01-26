@@ -34,17 +34,6 @@ export function OnboardingStepsPanel({
   
   // Safeguard: if path not found, default to first step
   const safeCurrentStepIndex = currentStepIndex >= 0 ? currentStepIndex : 0;
-  
-  // Debug: Log the matching (remove in production)
-  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log('OnboardingStepsPanel Debug:', {
-      currentPath,
-      normalizedCurrentPath,
-      currentStepIndex,
-      safeCurrentStepIndex,
-      steps: steps.map(s => s.path),
-    });
-  }
 
   return (
     <div className="hidden lg:flex flex-col relative overflow-hidden h-full">
@@ -68,8 +57,7 @@ export function OnboardingStepsPanel({
       <div className="relative z-10 flex flex-col h-full p-6 md:p-8 overflow-y-auto">
         {/* Heading */}
         <h1
-          className="text-xl font-bold mb-6"
-          style={{ color: `var(--auth-text-primary)` }}
+          className="text-xl font-bold mb-6 text-[var(--auth-text-primary)]"
         >
           AI Tele Caller
         </h1>
@@ -79,9 +67,8 @@ export function OnboardingStepsPanel({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 -ml-2 mb-4 self-start"
+            className="h-8 w-8 -ml-2 mb-4 self-start text-[var(--auth-text-muted)]"
             onClick={onBack}
-            style={{ color: `var(--auth-text-muted)` }}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -101,22 +88,10 @@ export function OnboardingStepsPanel({
               return (
                 <div
                   key={step.path}
-                  className="flex items-center gap-3 py-3 px-4 rounded-lg transition-all"
-                  style={{
-                    backgroundColor: `var(--auth-card-bg)`,
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: `var(--auth-card-border)`,
-                  }}
+                  className="flex items-center gap-3 py-3 px-4 rounded-lg transition-all bg-[var(--auth-card-bg)] border border-[var(--auth-card-border)]"
                 >
                   <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{
-                      backgroundColor: `var(--auth-icon-bg)`,
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderColor: `var(--auth-icon-border)`,
-                    }}
+                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[var(--auth-icon-bg)] border border-[var(--auth-icon-border)]"
                   >
                     <Check
                       className="h-5 w-5 text-green-500"
@@ -124,8 +99,7 @@ export function OnboardingStepsPanel({
                   </div>
                   <div className="flex-1">
                     <div
-                      className="text-sm font-semibold"
-                      style={{ color: `var(--auth-text-primary)` }}
+                      className="text-sm font-semibold text-[var(--auth-text-primary)]"
                     >
                       {step.title}
                     </div>
@@ -139,18 +113,11 @@ export function OnboardingStepsPanel({
               return (
                 <div
                   key={step.path}
-                  className="py-5 px-4 rounded-lg space-y-3"
-                  style={{
-                    backgroundColor: `var(--auth-card-bg)`,
-                    borderWidth: "2px",
-                    borderStyle: "solid",
-                    borderColor: `var(--auth-icon-color)`,
-                  }}
+                  className="py-5 px-4 rounded-lg space-y-3 bg-[var(--auth-card-bg)] border-2 border-[var(--auth-icon-color)]"
                 >
                   {/* Step Number */}
                   <div
-                    className="text-sm font-medium"
-                    style={{ color: `var(--auth-text-muted)` }}
+                    className="text-sm font-medium text-[var(--auth-text-muted)]"
                   >
                     Step {index + 1}/{steps.length}
                   </div>
@@ -158,33 +125,24 @@ export function OnboardingStepsPanel({
                   {/* Icon */}
                   <div className="flex justify-center">
                     <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center"
-                      style={{
-                        backgroundColor: `var(--auth-icon-bg)`,
-                        borderWidth: "1px",
-                        borderStyle: "solid",
-                        borderColor: `var(--auth-icon-border)`,
-                      }}
+                      className="w-16 h-16 rounded-full flex items-center justify-center bg-[var(--auth-icon-bg)] border border-[var(--auth-icon-border)]"
                     >
                       <StepIcon
-                        className="h-8 w-8"
-                        style={{ color: `var(--auth-icon-color)` }}
+                        className="h-8 w-8 text-[var(--auth-icon-color)]"
                       />
                     </div>
                   </div>
 
                   {/* Title */}
                   <h2
-                    className="text-xl font-semibold tracking-tight text-center"
-                    style={{ color: `var(--auth-text-primary)` }}
+                    className="text-xl font-semibold tracking-tight text-center text-[var(--auth-text-primary)]"
                   >
                     {step.title}
                   </h2>
 
                   {/* Description */}
                   <p
-                    className="text-sm leading-relaxed text-center"
-                    style={{ color: `var(--auth-text-secondary)` }}
+                    className="text-sm leading-relaxed text-center text-[var(--auth-text-secondary)]"
                   >
                     {step.description}
                   </p>
@@ -197,33 +155,18 @@ export function OnboardingStepsPanel({
               return (
                 <div
                   key={step.path}
-                  className="flex items-center gap-3 py-3 px-4 rounded-lg"
-                  style={{
-                    backgroundColor: `var(--auth-card-bg)`,
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: `var(--auth-card-border)`,
-                    opacity: 0.7,
-                  }}
+                  className="flex items-center gap-3 py-3 px-4 rounded-lg bg-[var(--auth-card-bg)] border border-[var(--auth-card-border)] opacity-70"
                 >
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{
-                      backgroundColor: `var(--auth-icon-bg)`,
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderColor: `var(--auth-icon-border)`,
-                    }}
+                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-[var(--auth-icon-bg)] border border-[var(--auth-icon-border)]"
                   >
                     <StepIcon
-                      className="h-5 w-5"
-                      style={{ color: `var(--auth-text-muted)` }}
+                      className="h-5 w-5 text-[var(--auth-text-muted)]"
                     />
                   </div>
                   <div className="flex-1">
                     <div
-                      className="text-sm font-semibold"
-                      style={{ color: `var(--auth-text-primary)` }}
+                      className="text-sm font-semibold text-[var(--auth-text-primary)]"
                     >
                       {step.title}
                     </div>
@@ -236,24 +179,15 @@ export function OnboardingStepsPanel({
             return (
               <div
                 key={step.path}
-                className="flex items-center gap-3 py-2 px-4 rounded-lg"
-                style={{
-                  backgroundColor: `var(--auth-card-bg)`,
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                  borderColor: `var(--auth-card-border)`,
-                  opacity: 0.6,
-                }}
+                className="flex items-center gap-3 py-2 px-4 rounded-lg bg-[var(--auth-card-bg)] border border-[var(--auth-card-border)] opacity-60"
               >
                 <div
-                  className="text-xs font-medium"
-                  style={{ color: `var(--auth-text-muted)` }}
+                  className="text-xs font-medium text-[var(--auth-text-muted)]"
                 >
                   {index + 1}.
                 </div>
                 <div
-                  className="text-sm"
-                  style={{ color: `var(--auth-text-muted)` }}
+                  className="text-sm text-[var(--auth-text-muted)]"
                 >
                   {step.label}
                 </div>

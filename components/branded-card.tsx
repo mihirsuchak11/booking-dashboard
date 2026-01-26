@@ -25,14 +25,10 @@ export function BrandedCard({ children, className }: BrandedCardProps) {
   return (
     <div 
       className={cn(
-        "relative w-full max-w-[1128px] backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl",
+        "relative w-full max-w-[1128px] backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl bg-[var(--auth-card-bg)] border border-[var(--auth-card-border)]",
         className
       )}
       style={{ 
-        backgroundColor: `var(--auth-card-bg)`, 
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: `var(--auth-card-border)`,
         boxShadow: `0 25px 50px -12px var(--auth-card-shadow)` 
       }}
     >

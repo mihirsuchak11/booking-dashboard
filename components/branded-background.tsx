@@ -68,8 +68,7 @@ export function BrandedBackground({ children }: BrandedBackgroundProps) {
 
       {/* Footer - Always at bottom */}
       <div 
-        className="flex-shrink-0 pt-4 pb-2 text-center text-xs" 
-        style={{ color: `var(--auth-text-muted)` }}
+        className="flex-shrink-0 pt-4 pb-2 text-center text-xs text-[var(--auth-text-muted)]"
       >
         © {new Date().getFullYear()} AI tele caller. All rights reserved.
       </div>

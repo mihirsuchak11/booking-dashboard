@@ -44,41 +44,34 @@ export function LeftPanelStepDetails({
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 -ml-2 mb-4" 
+            className="h-8 w-8 -ml-2 mb-4 text-[var(--auth-text-muted)]" 
             onClick={onBack}
-            style={{ color: `var(--auth-text-muted)` }}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
         )}
 
         {/* Step Number */}
-        <div className="text-sm font-medium" style={{ color: `var(--auth-text-muted)` }}>
+        <div className="text-sm font-medium text-[var(--auth-text-muted)]">
           {stepNumber}
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl font-semibold tracking-tight" style={{ color: `var(--auth-text-primary)` }}>
+        <h1 className="text-3xl font-semibold tracking-tight text-[var(--auth-text-primary)]">
           {title}
         </h1>
 
         {/* Description */}
-        <p className="text-base leading-relaxed" style={{ color: `var(--auth-text-secondary)` }}>
+        <p className="text-base leading-relaxed text-[var(--auth-text-secondary)]">
           {description}
         </p>
 
         {/* Icon */}
         <div className="pt-4">
           <div 
-            className="w-20 h-20 rounded-full mx-auto flex items-center justify-center"
-            style={{ 
-              backgroundColor: `var(--auth-icon-bg)`, 
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: `var(--auth-icon-border)` 
-            }}
+            className="w-20 h-20 rounded-full mx-auto flex items-center justify-center bg-[var(--auth-icon-bg)] border border-[var(--auth-icon-border)]"
           >
-            <Icon className="h-10 w-10" style={{ color: `var(--auth-icon-color)` }} />
+            <Icon className="h-10 w-10 text-[var(--auth-icon-color)]" />
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ export default function SearchBusinessPage() {
         <div className="flex flex-col items-center pt-6 px-6 md:pt-10 md:px-10 lg:pt-12 lg:px-12 pb-0">
           {/* Mobile Header - Only visible on mobile */}
           <div className="w-full max-w-4xl lg:hidden mb-6">
-            <h1 className="text-xl font-bold mb-4" style={{ color: `var(--auth-text-primary)` }}>
+            <h1 className="text-xl font-bold mb-4 text-[var(--auth-text-primary)]">
               AI Tele Caller
             </h1>
             {(() => {
@@ -32,10 +32,10 @@ export default function SearchBusinessPage() {
               if (currentStep) {
                 return (
                   <div className="space-y-2">
-                    <div className="text-sm font-medium" style={{ color: `var(--auth-text-muted)` }}>
+                    <div className="text-sm font-medium text-[var(--auth-text-muted)]">
                       Step {currentStepIndex + 1} of {ONBOARDING_STEPS.length}
                     </div>
-                    <h2 className="text-lg font-semibold" style={{ color: `var(--auth-text-primary)` }}>
+                    <h2 className="text-lg font-semibold text-[var(--auth-text-primary)]">
                       {currentStep.title}
                     </h2>
                   </div>
