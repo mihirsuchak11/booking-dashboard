@@ -30,7 +30,7 @@ export function FinalCTASection() {
         {/* CTA Button */}
         <div className="mb-12 flex justify-center">
           <a
-            href="#get-started"
+            href="/onboarding/search"
             className="cta-button relative p-[3px] rounded-[16px] text-white font-bold text-lg border-none cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 active:translate-y-0 inline-block"
           >
             <span className="relative z-[2] inline-flex items-center gap-2 py-[15px] px-[45px]">

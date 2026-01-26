@@ -8,6 +8,7 @@ import {
   ArrowRight01Icon,
   Menu01Icon,
 } from "@hugeicons/core-free-icons";
+import Link from "next/link";
 import { headerNavLinks } from "./nav-links";
 import { scrollToSection } from "./navigation";
 import "./mobile-menu.css";
@@ -176,21 +177,16 @@ export function MobileMenu() {
               </a>
             ))}
             <div className="flex flex-col gap-3 pt-6 mt-4 border-t border-white/10">
-              <Button variant="secondary" className="w-full" asChild>
-                <a href="#demo" onClick={() => closeMenu()}>
-                  Demo
-                </a>
-              </Button>
               <Button variant="default" className="w-full" asChild>
-                <a
-                  href="#get-started"
+                <Link
+                  href="/onboarding/search"
                   onClick={() => closeMenu()}
                   className="flex items-center justify-center gap-1.5"
                   aria-label="Get Started"
                 >
                   Get Started
                   <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} aria-hidden="true" />
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

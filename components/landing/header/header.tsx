@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
 import { headerNavLinks } from "./nav-links";
 import { useEffect, useState } from "react";
@@ -156,7 +157,7 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
-      <div className="flex h-14 w-full max-w-4xl items-center justify-between rounded-full border border-white/10 bg-[#0a0a0f]/80 px-6 backdrop-blur-md">
+      <div className="flex h-14 w-full max-w-5xl items-center justify-between rounded-full border border-white/10 bg-[#0a0a0f]/80 px-6 backdrop-blur-md">
         {/* Logo */}
         <a
           href="#home"
@@ -206,13 +207,13 @@ export function Header() {
             className="text-white/80 hover:text-white hover:bg-white/10"
             asChild
           >
-            <a href="#demo">Demo</a>
+            <Link href="/signin">Signin</Link>
           </Button>
           <Button size="sm" variant="default" className="bg-primary text-white hover:bg-primary/80" asChild>
-            <a href="#get-started" className="flex items-center gap-1.5" aria-label="Get Started">
-              Get Started
+            <Link href="/onboarding/search" className="flex items-center gap-1.5" aria-label="Get Started Free">
+              Get Started Free
               <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} aria-hidden="true" />
-            </a>
+            </Link>
           </Button>
         </div>
 

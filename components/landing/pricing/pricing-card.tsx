@@ -93,8 +93,11 @@ export function PricingCard({
               ? "bg-primary text-primary-foreground hover:bg-primary/80"
               : "border-white/20 bg-white/5 text-white hover:bg-white/10"
           }`}
+          asChild
         >
-          {plan.ctaText}
+          <a href="/signin" className="flex w-full items-center justify-center">
+            {plan.ctaText}
+          </a>
         </Button>
 
         <div className="pt-2 flex-1">
