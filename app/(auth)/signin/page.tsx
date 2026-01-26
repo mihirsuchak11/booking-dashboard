@@ -57,14 +57,7 @@ export default async function SignInPage({
 
       {/* Main Card Container */}
       <div 
-        className="relative w-full max-w-[1128px] grid lg:grid-cols-2 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl min-h-[600px]"
-        style={{ 
-          backgroundColor: `var(--auth-card-bg)`, 
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: `var(--auth-card-border)`,
-          boxShadow: `0 25px 50px -12px var(--auth-card-shadow)` 
-        }}
+        className="relative w-full max-w-[1128px] grid lg:grid-cols-2 backdrop-blur-xl rounded-3xl overflow-hidden min-h-[600px] border bg-[var(--auth-card-bg)] border-[var(--auth-card-border)] shadow-[0_25px_50px_-12px_var(--auth-card-shadow)]"
       >
         {/* Top shine effect */}
         <div 
@@ -145,13 +138,7 @@ export default async function SignInPage({
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center p-8">
               <div 
-                className="w-20 h-20 mx-auto mb-6 rounded-2xl backdrop-blur-sm flex items-center justify-center"
-                style={{ 
-                  backgroundColor: `var(--auth-icon-bg)`, 
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  borderColor: `var(--auth-icon-border)` 
-                }}
+                className="w-20 h-20 mx-auto mb-6 rounded-2xl backdrop-blur-sm flex items-center justify-center border bg-[var(--auth-icon-bg)] border-[var(--auth-icon-border)]"
               >
                 <svg className="w-10 h-10" style={{ color: `var(--auth-icon-color)` }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
