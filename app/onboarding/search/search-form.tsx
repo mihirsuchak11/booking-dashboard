@@ -404,11 +404,10 @@ export function SearchForm() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                size="icon"
+                                size="icon-lg"
                                 onClick={handleGetLocation}
                                 disabled={isLocating}
                                 title="Use my location"
-                                className={INPUT_HEIGHT}
                             >
                                 {isLocating ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />

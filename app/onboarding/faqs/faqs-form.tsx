@@ -115,7 +115,7 @@ export function FAQsForm() {
                     )}
                 </div>
 
-                {isAdding || faqs.length === 0 ? (
+                {(isAdding || faqs.length === 0) && (
                     <div 
                         ref={formRef}
                         className="border border-border/50 rounded-lg p-6 space-y-6 bg-card/30 backdrop-blur-sm"
@@ -156,7 +156,12 @@ export function FAQsForm() {
                             )}
                         </div>
                     </div>
-                ) : (
+                )}
+            </div>
+
+            {/* Fixed Action Buttons at Bottom */}
+            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4 space-y-3">
+                {!isAdding && faqs.length > 0 && (
                     <Button
                         variant="outline"
                         className="w-full border-dashed text-foreground"
@@ -166,10 +171,6 @@ export function FAQsForm() {
                         <Plus className="h-4 w-4 mr-2" /> Add Another Question
                     </Button>
                 )}
-            </div>
-
-            {/* Continue Button - Fixed at Bottom */}
-            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4">
                 {!isAdding && faqs.length > 0 && (
                     <Button onClick={handleContinue} className="w-full" size={BUTTON_SIZE}>
                         Continue <ArrowRight className="h-4 w-4 ml-2" />
