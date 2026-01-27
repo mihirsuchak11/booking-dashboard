@@ -15,7 +15,7 @@ export function StatsLoading() {
         return (
           <div
             key={i}
-            className="relative overflow-hidden rounded-xl border border-border bg-card p-4"
+            className="relative overflow-hidden rounded-3xl border border-border bg-card p-4"
           >
             <div className="flex items-start justify-between">
               <div className="space-y-1">

@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { useOnboarding } from "@/contexts/onboarding-context";
+import { INPUT_HEIGHT, BUTTON_SIZE } from "@/lib/ui-constants";
+import { cn, generateUUID } from "@/lib/utils";
 import {
     Select,
     SelectContent,
@@ -42,7 +44,7 @@ function SearchSubmitButton({ isSearching }: { isSearching: boolean }) {
     const showLoading = pending || isSearching;
 
     return (
-        <Button type="submit" disabled={showLoading} className="w-full">
+        <Button type="submit" disabled={showLoading} className="w-full" size={BUTTON_SIZE}>
             {showLoading ? (
                 <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -198,7 +200,7 @@ export function SearchForm() {
                 },
                 services: data.services.map((s) => ({
                     ...s,
-                    id: crypto.randomUUID()
+                    id: generateUUID()
                 })),
                 faqs: data.faqs
             });
@@ -316,9 +318,9 @@ export function SearchForm() {
     // Generating state UI
     if (isGenerating || isGeneratePending) {
         return (
-            <div className="flex flex-col items-center justify-center h-full min-h-[400px] space-y-8 animate-in fade-in zoom-in duration-300">
+            <div className="flex flex-col items-center justify-center flex-1 space-y-8 animate-in fade-in zoom-in duration-300">
                 <div className="space-y-4 text-center">
-                    <h2 className="text-2xl font-bold">Setting up {businessName || searchState?.searchTerm || "your business"}</h2>
+                    <h2 className="text-2xl font-bold text-foreground">Setting up {businessName || searchState?.searchTerm || "your business"}</h2>
                     <p className="text-muted-foreground">{status}</p>
                 </div>
 
@@ -339,17 +341,6 @@ export function SearchForm() {
     return (
         <>
             <form action={searchAction} className="w-full max-w-sm mx-auto space-y-8">
-                {/* Steps / Header */}
-                <div className="space-y-2">
-                    <span className="text-sm font-medium text-muted-foreground">Step 1/4</span>
-                    <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                        Find Your Business
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                        Enter your business name and location to get started.
-                    </p>
-                </div>
-
                 {/* Form Fields */}
                 <div className="space-y-5">
 
@@ -360,7 +351,7 @@ export function SearchForm() {
                             value={region}
                             onValueChange={(val: RegionCode) => setRegion(val)}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger className={cn(`!${INPUT_HEIGHT}`, "[&>svg]:text-muted-foreground")}>
                                 {mounted ? (
                                     <span className="flex items-center">
                                         <span className="text-lg mr-2">{REGION_OPTIONS.find(o => o.value === region)?.flag}</span>
@@ -394,7 +385,7 @@ export function SearchForm() {
                                     id="location"
                                     name="location"
                                     placeholder="e.g. Ahmedabad, Gujarat"
-                                    className="pl-10"
+                                    className={cn(INPUT_HEIGHT, "pl-10")}
                                     value={location}
                                     onChange={(e) => setLocation(e.target.value)}
                                 />
@@ -402,7 +393,7 @@ export function SearchForm() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                size="icon"
+                                size="icon-lg"
                                 onClick={handleGetLocation}
                                 disabled={isLocating}
                                 title="Use my location"
@@ -410,7 +401,7 @@ export function SearchForm() {
                                 {isLocating ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
-                                    <LocateFixed className="h-4 w-4" />
+                                    <LocateFixed className="h-4 w-4 text-foreground" />
                                 )}
                             </Button>
                         </div>
@@ -428,7 +419,7 @@ export function SearchForm() {
                                 id="businessName"
                                 name="businessName"
                                 placeholder="e.g. Kohinoor Photography"
-                                className="pl-10"
+                                className={cn(INPUT_HEIGHT, "pl-10")}
                                 value={businessName}
                                 onChange={(e) => setBusinessName(e.target.value)}
                                 required

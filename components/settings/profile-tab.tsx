@@ -118,12 +118,12 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">Business Information</h2>
 
         <div className="space-y-4">
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Business Name</label>
+            <label className="text-sm font-medium text-muted-foreground">Business Name</label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -132,7 +132,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Description</label>
+            <label className="text-sm font-medium text-muted-foreground">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -142,7 +142,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Timezone</label>
+            <label className="text-sm font-medium text-muted-foreground">Timezone</label>
             <select
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
@@ -157,7 +157,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Address</label>
+            <label className="text-sm font-medium text-muted-foreground">Address</label>
             <Input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -167,12 +167,12 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
         </div>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">Contact Information</h2>
 
         <div className="space-y-4">
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Phone Number</label>
+            <label className="text-sm font-medium text-muted-foreground">Phone Number</label>
             <Input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -181,7 +181,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium text-muted-foreground">Email</label>
             <Input
               type="email"
               value={email}
@@ -191,7 +191,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Website</label>
+            <label className="text-sm font-medium text-muted-foreground">Website</label>
             <Input
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
@@ -201,12 +201,12 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
         </div>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">AI Assistant Settings</h2>
 
         <div className="space-y-4">
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Greeting Message</label>
+            <label className="text-sm font-medium text-muted-foreground">Greeting Message</label>
             <Input
               value={greeting}
               onChange={(e) => setGreeting(e.target.value)}
@@ -218,7 +218,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Notes for AI</label>
+            <label className="text-sm font-medium text-muted-foreground">Notes for AI</label>
             <textarea
               value={notesForAi}
               onChange={(e) => setNotesForAi(e.target.value)}

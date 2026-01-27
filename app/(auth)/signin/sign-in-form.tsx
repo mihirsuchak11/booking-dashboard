@@ -5,6 +5,8 @@ import { useFormStatus } from "react-dom";
 import { signInAction, type SignInState } from "./actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { INPUT_HEIGHT, BUTTON_SIZE } from "@/lib/ui-constants";
 
 const initialState: SignInState = {};
 
@@ -12,7 +14,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
+    <Button type="submit" className="w-full" size={BUTTON_SIZE} disabled={pending}>
       {pending ? "Signing in..." : "Sign in"}
     </Button>
   );
@@ -36,7 +38,7 @@ export function SignInForm() {
           type="email"
           required
           autoComplete="email"
-          className="h-9"
+          className={cn(INPUT_HEIGHT)}
         />
       </div>
 
@@ -53,7 +55,7 @@ export function SignInForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="h-9"
+          className={cn(INPUT_HEIGHT)}
         />
       </div>
 

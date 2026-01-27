@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboarding, FAQ } from "@/contexts/onboarding-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea"; // Assuming you have this, or use standard textarea
-import { Plus, Trash2, MessageCircle, ChevronLeft, ArrowRight } from "lucide-react";
+import { Plus, Trash2, MessageCircle, ArrowRight, ChevronLeft } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { BUTTON_SIZE } from "@/lib/ui-constants";
 
 export function FAQsForm() {
     const router = useRouter();
@@ -19,6 +20,23 @@ export function FAQsForm() {
         question: "",
         answer: "",
     });
+
+    // Ref for the form container to scroll into view
+    const formRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll to form when adding starts
+    useEffect(() => {
+        if (isAdding && formRef.current) {
+            // Small delay to ensure DOM is updated
+            setTimeout(() => {
+                formRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                });
+            }, 100);
+        }
+    }, [isAdding]);
 
     const handleAddFAQ = () => {
         if (!newFAQ.question || !newFAQ.answer) return;
@@ -33,43 +51,25 @@ export function FAQsForm() {
         setNewFAQ({ question: "", answer: "" });
     };
 
-    const handleBack = () => {
-        router.back();
-    };
-
     const handleContinue = () => {
         router.push("/onboarding/review");
     };
 
     return (
-        <div className="w-full max-w-lg mx-auto space-y-8">
+        <>
+            <div className="w-full flex flex-col h-full max-h-[calc(100dvh-226px)] md:max-h-[calc(100dvh-240px)] lg:max-h-[calc(100dvh-158px)]">
 
-            {/* Header */}
-            <div className="space-y-2">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                    <Button variant="ghost" size="icon" className="h-6 w-6 -ml-2" onClick={handleBack}>
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <span className="text-sm font-medium">Step 3/4</span>
-                </div>
-                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                    Frequently Asked Questions
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                    Help AI answer common customer questions accurately.
-                </p>
-            </div>
-
-            <div className="space-y-6">
+            {/* Scrollable Content Area */}
+            <div className="flex-1 overflow-y-auto min-h-0 space-y-6 pr-2 -mr-2">
                 <div className="space-y-4">
                     {faqs.map((faq) => (
                         <div
                             key={faq.id}
-                            className="border rounded-lg p-4 bg-card group space-y-2"
+                            className="border border-border/50 rounded-lg p-4 bg-card/50 backdrop-blur-sm group space-y-2"
                         >
                             <div className="flex items-start justify-between gap-4">
                                 <div className="space-y-1">
-                                    <h3 className="font-medium flex items-center gap-2">
+                                    <h3 className="font-medium flex items-center gap-2 text-foreground">
                                         <MessageCircle className="h-3 w-3 text-primary" />
                                         {faq.question}
                                     </h3>
@@ -90,14 +90,17 @@ export function FAQsForm() {
                     ))}
 
                     {faqs.length === 0 && !isAdding && (
-                        <div className="text-center py-8 border-2 border-dashed rounded-lg text-muted-foreground">
+                        <div className="text-center py-8 border-2 border-dashed border-border/50 rounded-lg text-muted-foreground">
                             No FAQs added yet.
                         </div>
                     )}
                 </div>
 
-                {isAdding || faqs.length === 0 ? (
-                    <div className="border rounded-lg p-6 space-y-6 bg-muted/30">
+                {(isAdding || faqs.length === 0) && (
+                    <div 
+                        ref={formRef}
+                        className="border border-border/50 rounded-lg p-6 space-y-6 bg-card/30 backdrop-blur-sm"
+                    >
                         <div className="grid gap-4">
                             <div className="grid gap-2">
                                 <Label className="text-sm font-medium">Question</Label>
@@ -123,42 +126,79 @@ export function FAQsForm() {
                             </div>
                         </div>
 
-                        <div className="flex gap-3 pt-2">
-                            <Button onClick={handleAddFAQ} disabled={!newFAQ.question || !newFAQ.answer} className="w-full">
+                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                            <Button 
+                                onClick={handleAddFAQ} 
+                                disabled={!newFAQ.question || !newFAQ.answer} 
+                                className="w-full sm:max-w-[150px]"
+                                size={BUTTON_SIZE}
+                            >
                                 {faqs.length === 0 ? "Add First FAQ" : "Save FAQ"}
                             </Button>
                             {faqs.length > 0 && (
-                                <Button variant="ghost" onClick={() => setIsAdding(false)}>
+                                <Button 
+                                    variant="ghost" 
+                                    onClick={() => setIsAdding(false)}
+                                    className="w-full sm:max-w-[120px]"
+                                    size={BUTTON_SIZE}
+                                >
                                     Cancel
                                 </Button>
                             )}
                         </div>
                     </div>
-                ) : (
-                    <Button
-                        variant="outline"
-                        className="w-full border-dashed"
-                        onClick={() => setIsAdding(true)}
-                    >
-                        <Plus className="h-4 w-4 mr-2" /> Add Another Question
-                    </Button>
                 )}
+            </div>
 
-                <div className="pt-4">
-                    {!isAdding && faqs.length > 0 && (
-                        <Button onClick={handleContinue} className="w-full">
-                            Continue <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
-                    )}
-                    {/* If adding or empty, block continue or force user to resolve the open form */}
-                    {isAdding && faqs.length > 0 && (
-                        <Button disabled className="w-full">Continue <ArrowRight className="h-4 w-4 ml-2" /></Button>
-                    )}
-                    {faqs.length === 0 && !isAdding && (
-                        <Button disabled className="w-full">Continue <ArrowRight className="h-4 w-4 ml-2" /></Button>
-                    )}
+            {/* Fixed Action Buttons at Bottom */}
+            <div className="pt-4 flex-shrink-0 border-t border-border/50 mt-4 overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-end lg:justify-between gap-3 min-w-0 w-full">
+                    {/* Back Button - Left Side (Hidden on mobile, visible on large screens) */}
+                    <Button
+                        variant="ghost"
+                        onClick={() => router.back()}
+                        size={BUTTON_SIZE}
+                        className="hidden lg:flex flex-shrink-0"
+                    >
+                        <ChevronLeft className="h-4 w-4 mr-2" /> Back
+                    </Button>
+
+                    {/* Step-specific Buttons - Right Side */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                        {!isAdding && faqs.length > 0 && (
+                            <>
+                                <Button
+                                    variant="outline"
+                                    className="w-full sm:flex-1 sm:min-w-0 border-dashed text-foreground px-7"
+                                    onClick={() => setIsAdding(true)}
+                                    size={BUTTON_SIZE}
+                                >
+                                    <Plus className="h-4 w-4" /> Add Another Question
+                                </Button>
+                                <Button 
+                                    onClick={handleContinue} 
+                                    className="w-full sm:flex-shrink-0 sm:max-w-[150px] min-w-0" 
+                                    size={BUTTON_SIZE}
+                                >
+                                    Continue <ArrowRight className="h-4 w-4 ml-2" />
+                                </Button>
+                            </>
+                        )}
+                        {/* If adding or empty, we generally block continue, or user must cancel add first */}
+                        {isAdding && faqs.length > 0 && (
+                            <Button disabled className="w-full sm:flex-shrink-0 sm:max-w-[150px] min-w-0" size={BUTTON_SIZE}>
+                                Continue <ArrowRight className="h-4 w-4 ml-2" />
+                            </Button>
+                        )}
+                        {faqs.length === 0 && !isAdding && (
+                            <Button disabled className="w-full sm:flex-shrink-0 sm:max-w-[150px] min-w-0" size={BUTTON_SIZE}>
+                                Continue <ArrowRight className="h-4 w-4 ml-2" />
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
+        </>
     );
 }

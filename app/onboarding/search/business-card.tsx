@@ -16,11 +16,10 @@ export function BusinessCard({ business, isSelected, onSelect }: BusinessCardPro
             onClick={() => onSelect(business)}
             className={cn(
                 "w-full text-left p-4 rounded-xl border-2 transition-all duration-200",
-                "hover:border-primary/50 hover:bg-accent/50 hover:shadow-md",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                 isSelected
                     ? "border-primary bg-primary/5 shadow-md"
-                    : "border-border bg-card"
+                    : "border-border bg-card hover:border-primary/30 hover:bg-muted/50 hover:shadow-sm"
             )}
         >
             <div className="flex items-start justify-between gap-3">
@@ -44,29 +43,40 @@ export function BusinessCard({ business, isSelected, onSelect }: BusinessCardPro
                         </span>
                     )}
 
-                    {/* Address */}
+                    {/* Address - Full width on its own line */}
                     {business.address && (
-                        <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <div className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                            <MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
                             <span className="line-clamp-2">{business.address}</span>
                         </div>
                     )}
 
-                    {/* Phone */}
-                    {business.phone && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Phone className="w-4 h-4 flex-shrink-0" />
-                            <span>{business.phone}</span>
-                        </div>
-                    )}
+                    {/* Phone and Website - Together on second line */}
+                    {(business.phone || business.websiteUrl) && (
+                        <div className="flex items-center gap-x-4 gap-y-1.5 text-sm">
+                            {/* Phone */}
+                            {business.phone && (
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
+                                    <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+                                    <span className="whitespace-nowrap">{business.phone}</span>
+                                </div>
+                            )}
 
-                    {/* Website */}
-                    {business.websiteUrl && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Globe className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate text-primary/80">
-                                {business.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                            </span>
+                            {/* Website */}
+                            {business.websiteUrl && (
+                                <div className="flex items-center gap-1.5">
+                                    <Globe className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground" />
+                                    <a
+                                        href={business.websiteUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="truncate text-primary hover:text-primary/80 hover:underline font-medium"
+                                    >
+                                        {business.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

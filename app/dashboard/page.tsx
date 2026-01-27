@@ -57,7 +57,7 @@ export default async function DashboardPage({
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Suspense
                   fallback={
-                    <div className="rounded-xl border border-border bg-card p-6 max-h-[400px]">
+                    <div className="rounded-3xl border border-border bg-card p-6 max-h-[400px]">
                       <div className="text-center py-8 text-muted-foreground">
                         Loading conversion funnel...
                       </div>

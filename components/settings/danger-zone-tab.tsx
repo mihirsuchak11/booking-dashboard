@@ -48,7 +48,7 @@ export function DangerZoneTab({ businessId, businessName }: DangerZoneTabProps) 
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-6">
+      <div className="rounded-3xl border border-destructive/50 bg-destructive/5 p-6">
         <div className="flex items-start gap-4">
           <div className="rounded-full bg-destructive/10 p-2">
             <AlertTriangle className="h-5 w-5 text-destructive" />
@@ -72,7 +72,7 @@ export function DangerZoneTab({ businessId, businessName }: DangerZoneTabProps) 
                   Delete Business
                 </Button>
               ) : (
-                <div className="space-y-4 p-4 rounded-lg border border-destructive/30 bg-background">
+                <div className="space-y-4 p-4 rounded-3xl border border-destructive/30 bg-background">
                   <p className="text-sm font-medium">
                     To confirm, type{" "}
                     <span className="font-mono bg-muted px-1 rounded">
@@ -128,7 +128,7 @@ export function DangerZoneTab({ businessId, businessName }: DangerZoneTabProps) 
         </div>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="rounded-3xl border bg-card p-6">
         <h3 className="font-medium mb-2">What will be deleted:</h3>
         <ul className="text-sm text-muted-foreground space-y-1">
           <li>• All business information and settings</li>

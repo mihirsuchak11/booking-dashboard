@@ -33,7 +33,7 @@ export function HeroSection() {
                 className="w-full sm:w-auto h-11 sm:h-12 px-4 sm:px-6 text-sm sm:text-base bg-primary text-white hover:bg-primary/80"
                 asChild
               >
-                <a href="#demo" className="flex w-full items-center justify-center gap-2" aria-label="Try a Live Demo Call">
+                <a href="/onboarding/search" className="flex w-full items-center justify-center gap-2" aria-label="Try a Live Demo Call">
                   Try a Live Demo Call
                   <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} aria-hidden="true" />
                 </a>

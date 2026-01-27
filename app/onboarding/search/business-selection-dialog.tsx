@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BusinessCard } from "./business-card";
 import { BusinessSearchResult } from "../actions";
+import { BUTTON_SIZE } from "@/lib/ui-constants";
 
 interface BusinessSelectionDialogProps {
     open: boolean;
@@ -40,18 +41,20 @@ function ConfirmButton({
         <Button
             onClick={onClick}
             disabled={!selectedBusiness || pending}
-            className="w-full"
-            size="lg"
+            className="w-full sm:flex-1 sm:min-w-[120px]"
+            size={BUTTON_SIZE}
         >
             {pending ? (
                 <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin flex-shrink-0" />
+                    <span className="truncate">Processing...</span>
                 </>
             ) : selectedBusiness ? (
-                <>Select {selectedBusiness.name.length > 25 ? selectedBusiness.name.slice(0, 25) + "..." : selectedBusiness.name}</>
+                <span className="truncate">
+                    Select {selectedBusiness.name.length > 20 ? selectedBusiness.name.slice(0, 20) + "..." : selectedBusiness.name}
+                </span>
             ) : (
-                "Select a business to continue"
+                <span className="truncate">Select a business to continue</span>
             )}
         </Button>
     );
@@ -97,7 +100,7 @@ export function BusinessSelectionDialog({
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="max-w-[calc(100%-1rem)] sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-primary" />
@@ -127,15 +130,15 @@ export function BusinessSelectionDialog({
                                 We couldn't find any businesses matching your search.
                             </p>
                         </div>
-                        <Button onClick={handleManualEntry} variant="outline">
+                        <Button onClick={handleManualEntry} variant="outline" size={BUTTON_SIZE}>
                             <PenLine className="w-4 h-4 mr-2" />
                             Enter Details Manually
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex flex-col">
+                    <div className="flex flex-col max-h-[60vh] sm:max-h-[70vh] overflow-hidden">
                         {/* Business Cards - Scrollable */}
-                        <div className="space-y-3 max-h-[45vh] overflow-y-auto pr-1">
+                        <div className="flex-1 space-y-3 overflow-y-auto pr-1 min-h-0">
                             {businesses.map((business) => (
                                 <BusinessCard
                                     key={business.id}
@@ -147,20 +150,21 @@ export function BusinessSelectionDialog({
                         </div>
 
                         {/* Actions - Fixed at bottom */}
-                        <div className="flex flex-col gap-3 pt-4 mt-4 border-t sticky bottom-0 bg-background">
+                        <div className="flex flex-col sm:flex-row gap-3 pt-4 mt-4 border-t flex-shrink-0">
+                            <Button
+                                onClick={handleManualEntry}
+                                variant="ghost"
+                                className="w-full sm:w-auto sm:flex-shrink-0 text-muted-foreground hover:text-foreground"
+                                size={BUTTON_SIZE}
+                            >
+                                <PenLine className="w-4 h-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">My business isn't listed — enter manually</span>
+                            </Button>
+
                             <ConfirmButton
                                 selectedBusiness={selectedBusiness}
                                 onClick={handleConfirm}
                             />
-
-                            <Button
-                                onClick={handleManualEntry}
-                                variant="ghost"
-                                className="w-full text-muted-foreground hover:text-foreground"
-                            >
-                                <PenLine className="w-4 h-4 mr-2" />
-                                My business isn't listed — enter manually
-                            </Button>
                         </div>
                     </div>
                 )}

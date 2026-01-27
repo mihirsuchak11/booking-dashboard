@@ -93,7 +93,7 @@ export function PricingCards({
               }
             }
           }}
-          className="relative overflow-hidden"
+          className="relative overflow-clip [clip-path:inset(0_round_1.5rem)]"
         >
           {plan.isPopular && (
             <div

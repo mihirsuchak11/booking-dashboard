@@ -101,7 +101,7 @@ export async function UpcomingAppointmentsWrapper({
   // Check if Supabase is configured
   if (!isSupabaseConfigured()) {
     return (
-      <div className="relative rounded-xl border border-border bg-card p-6 max-h-[400px]">
+      <div className="relative rounded-3xl border border-border bg-card p-6 max-h-[400px]">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="size-4 text-muted-foreground" />
           <h2 className="text-[15px] font-normal text-foreground tracking-[-0.45px]">
@@ -121,7 +121,7 @@ export async function UpcomingAppointmentsWrapper({
   ]);
 
   return (
-    <div className="relative rounded-xl border border-border bg-card max-h-[400px] overflow-hidden">
+    <div className="relative rounded-3xl border border-border bg-card max-h-[400px] overflow-hidden">
       <div className="h-full overflow-y-auto">
         <div className="p-6 pb-4">
           <div className="flex items-center justify-between mb-4">
@@ -195,7 +195,7 @@ export async function UpcomingAppointmentsWrapper({
       </div>
 
       {/* Pure CSS scroll shadow - stays fixed at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-card to-transparent pointer-events-none rounded-b-xl" />
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-card to-transparent pointer-events-none rounded-b-3xl" />
     </div>
   );
 }
