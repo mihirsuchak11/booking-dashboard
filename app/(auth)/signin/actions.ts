@@ -20,7 +20,7 @@ const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password.";
 /**
  * Initiates Google OAuth sign-in flow.
  * Uses SSR client for proper PKCE code verifier handling.
- * Plan is read from stripe_plan cookie in auth callback.
+ * Redirects user to Google's consent screen.
  */
 export async function signInWithGoogleAction() {
   // Use SSR client which properly stores PKCE code verifier in cookies
