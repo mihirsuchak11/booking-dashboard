@@ -7,6 +7,9 @@ import {
   setAuthenticatedUserId,
   clearAuthenticatedUser,
 } from "@/lib/auth-session";
+import { createSessionForUser } from "@/lib/stripe-create-session";
+import { isPlanKey } from "@/config/stripe-plans";
+import { getBusinessIdForUser } from "@/lib/business-auth";
 
 export interface SignInState {
   error?: string;
@@ -17,7 +20,7 @@ const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password.";
 /**
  * Initiates Google OAuth sign-in flow.
  * Uses SSR client for proper PKCE code verifier handling.
- * Redirects user to Google's consent screen.
+ * Plan is read from stripe_plan cookie in auth callback.
  */
 export async function signInWithGoogleAction() {
   // Use SSR client which properly stores PKCE code verifier in cookies
@@ -53,6 +56,7 @@ export async function signInAction(
 ): Promise<SignInState> {
   const email = formData.get("email");
   const password = formData.get("password");
+  const planParam = formData.get("plan");
 
   if (typeof email !== "string" || typeof password !== "string") {
     return { error: "Invalid form submission." };
@@ -77,7 +81,19 @@ export async function signInAction(
   // Store only the user ID in a secure HTTP-only cookie.
   await setAuthenticatedUserId(data.user.id);
 
-  redirect("/dashboard");
+  const planKey = planParam && isPlanKey(planParam) ? planParam : null;
+  if (planKey) {
+    const result = await createSessionForUser(planKey);
+    if (result.url) {
+      redirect(result.url);
+    }
+  }
+
+  const businessId = await getBusinessIdForUser(data.user.id);
+  if (businessId) {
+    redirect("/dashboard");
+  }
+  redirect("/onboarding");
 }
 
 export async function signOutAction() {

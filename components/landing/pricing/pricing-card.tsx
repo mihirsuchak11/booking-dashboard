@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -5,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Tick02Icon } from "@hugeicons/core-free-icons";
 import type { PricingPlan } from "./pricing-data";
+import { getPlanKey } from "./pricing-data";
 
 // Helper function to calculate original yearly price (monthly * 12)
 function calculateOriginalYearlyPrice(monthlyPrice: string): string {
@@ -20,6 +24,11 @@ export function PricingCard({
   plan: PricingPlan;
   billingPeriod: "monthly" | "yearly";
 }) {
+  const router = useRouter();
+  const handleSignUp = () => {
+    const planKey = getPlanKey(plan.id, billingPeriod);
+    router.push(`/signin?plan=${encodeURIComponent(planKey)}`);
+  };
   return (
     <Card
       className={`relative isolate flex h-full flex-col overflow-hidden rounded-3xl border border-white/15 py-0 shadow-lg backdrop-blur-sm gap-2 ${
@@ -93,11 +102,9 @@ export function PricingCard({
               ? "bg-primary text-primary-foreground hover:bg-primary/80"
               : "border-white/20 bg-white/5 text-white hover:bg-white/10"
           }`}
-          asChild
+          onClick={handleSignUp}
         >
-          <a href="/signin" className="flex w-full items-center justify-center">
-            {plan.ctaText}
-          </a>
+          {plan.ctaText}
         </Button>
 
         <div className="pt-2 flex-1">

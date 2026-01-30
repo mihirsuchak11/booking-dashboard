@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { INPUT_HEIGHT, BUTTON_SIZE } from "@/lib/ui-constants";
+import type { PlanKey } from "@/config/stripe-plans";
 
 const initialState: SignInState = {};
 
@@ -20,11 +21,12 @@ function SubmitButton() {
   );
 }
 
-export function SignInForm() {
+export function SignInForm({ planKey }: { planKey?: PlanKey }) {
   const [state, formAction] = useActionState(signInAction, initialState);
 
   return (
     <form action={formAction} className="space-y-4">
+      {planKey && <input type="hidden" name="plan" value={planKey} />}
       <div className="space-y-2">
         <label
           htmlFor="email"
