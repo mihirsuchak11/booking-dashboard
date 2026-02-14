@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase-ssr";
 import { setAuthenticatedUserId } from "@/lib/auth-session";
 import { getBusinessIdForUser } from "@/lib/business-auth";
+import { createSessionForUser } from "@/lib/stripe-create-session";
+import { isPlanKey } from "@/config/stripe-plans";
+
+const STRIPE_PLAN_COOKIE = "stripe_plan";
 
 /**
  * OAuth callback handler for Google Sign-In.
- * 
- * Flow:
- * 1. User clicks "Sign in with Google"
- * 2. Google redirects here with an auth code
- * 3. We exchange the code for a session (SSR client reads PKCE verifier from cookies)
- * 4. Set our custom HTTP-only cookie
- * 5. Redirect to dashboard (if business exists) or onboarding (if new user)
+ * If stripe_plan cookie is set, creates Stripe session or free subscription, then redirects.
  */
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
@@ -19,7 +18,6 @@ export async function GET(request: NextRequest) {
     const error = searchParams.get("error");
     const errorDescription = searchParams.get("error_description");
 
-    // Handle OAuth errors from Google
     if (error) {
         console.error("[OAuth Callback] Error from provider:", error, errorDescription);
         return NextResponse.redirect(
@@ -27,7 +25,6 @@ export async function GET(request: NextRequest) {
         );
     }
 
-    // No code means something went wrong
     if (!code) {
         console.error("[OAuth Callback] No code provided");
         return NextResponse.redirect(
@@ -36,10 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        // Use SSR client which reads the PKCE code verifier from cookies
         const supabase = await createSupabaseServerClient();
-
-        // Exchange the OAuth code for a session
         const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
         if (exchangeError) {
@@ -56,25 +50,27 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        console.log("[OAuth Callback] User authenticated:", data.user.email);
-
-        // Store user ID in our custom HTTP-only session cookie
         await setAuthenticatedUserId(data.user.id);
 
-        // Check if user has an existing business
-        const businessId = await getBusinessIdForUser(data.user.id);
+        const cookieStore = await cookies();
+        const planCookie = cookieStore.get(STRIPE_PLAN_COOKIE)?.value;
+        const planKey = planCookie && isPlanKey(planCookie) ? planCookie : null;
 
-        if (businessId) {
-            // Existing user with business - go to dashboard
-            console.log("[OAuth Callback] User has business, redirecting to dashboard");
-            return NextResponse.redirect(new URL("/dashboard", request.url));
-        } else {
-            // New user - needs to complete onboarding
-            console.log("[OAuth Callback] New user, redirecting to onboarding");
-            return NextResponse.redirect(new URL("/onboarding", request.url));
+        if (planKey) {
+            cookieStore.set(STRIPE_PLAN_COOKIE, "", { path: "/", maxAge: 0 });
+            const result = await createSessionForUser(planKey);
+            if (result.url) {
+                return NextResponse.redirect(result.url);
+            }
         }
-    } catch (error) {
-        console.error("[OAuth Callback] Unexpected error:", error);
+
+        const businessId = await getBusinessIdForUser(data.user.id);
+        if (businessId) {
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+        return NextResponse.redirect(new URL("/onboarding", request.url));
+    } catch (err) {
+        console.error("[OAuth Callback] Unexpected error:", err);
         return NextResponse.redirect(
             new URL("/signin?error=callback_failed", request.url)
         );

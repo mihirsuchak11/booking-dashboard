@@ -9,6 +9,27 @@ export interface PricingPlan {
   isPopular?: boolean;
 }
 
+/** Canonical plan keys (no Stripe IDs in UI). */
+export type PlanKey =
+  | "free"
+  | "professional_monthly"
+  | "professional_yearly"
+  | "enterprise_monthly"
+  | "enterprise_yearly";
+
+/** Derive planKey from plan id + billing period for redirect. */
+export function getPlanKey(
+  planId: string,
+  billingPeriod: "monthly" | "yearly"
+): PlanKey {
+  if (planId === "free") return "free";
+  if (planId === "professional")
+    return billingPeriod === "monthly" ? "professional_monthly" : "professional_yearly";
+  if (planId === "enterprise")
+    return billingPeriod === "monthly" ? "enterprise_monthly" : "enterprise_yearly";
+  return "free";
+}
+
 export const pricingPlans: PricingPlan[] = [
   {
     id: "free",

@@ -1,6 +1,6 @@
-
 import { SignInForm } from "./sign-in-form";
 import { GoogleSignInButton } from "./google-sign-in-button";
+import { isPlanKey, type PlanKey } from "@/config/stripe-plans";
 
 // Error messages for OAuth failures
 const errorMessages: Record<string, string> = {
@@ -14,10 +14,16 @@ const errorMessages: Record<string, string> = {
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; plan?: string }>;
 }) {
   const params = await searchParams;
   const error = params.error;
+  const planParam = params.plan;
+  const planKey: PlanKey | null =
+    planParam && isPlanKey(planParam) ? planParam : null;
+
+  // stripe_plan cookie is set by middleware when visiting /signin?plan=...
+
   const errorMessage = error ? errorMessages[error] || "An unknown error occurred." : null;
 
   return (
@@ -100,7 +106,7 @@ export default async function SignInPage({
             </div>
 
             {/* Email/Password Form */}
-            <SignInForm />
+            <SignInForm planKey={planKey ?? undefined} />
 
             <p className="text-xs text-muted-foreground text-center pt-4">
               By clicking continue, you agree to our
