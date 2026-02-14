@@ -173,7 +173,8 @@ export function SearchForm() {
             setProgress(90);
 
             const data = generateState.data;
-            const currentRegion = searchState?.region || region;
+            // Prefer current dropdown region so selected region is always what user sees and gets saved to DB
+            const currentRegion = region || searchState?.region;
 
             setAllData({
                 businessInfo: {

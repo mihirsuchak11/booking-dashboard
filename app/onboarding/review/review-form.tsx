@@ -31,6 +31,7 @@ export function ReviewForm() {
                 address: businessInfo.address,
                 phone: businessInfo.phone,
                 email: businessInfo.email,
+                website: businessInfo.website,
                 description: businessInfo.description,
                 region: businessInfo.region,
                 timezone: businessInfo.timezone,

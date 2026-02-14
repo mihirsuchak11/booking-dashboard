@@ -80,6 +80,7 @@ export interface BusinessConfig {
   greeting: string | null;
   working_hours: any; // JSONB
   services?: any; // JSONB
+  faqs?: any; // JSONB - { id, question, answer }[]
   booking_settings?: any; // JSONB
   business_profile?: any; // JSONB
   min_notice_hours: number;

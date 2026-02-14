@@ -13,6 +13,8 @@ export async function updateBusinessAction(data: {
   name?: string;
   timezone?: string;
   default_phone_number?: string | null;
+  website?: string | null;
+  address?: string | null;
 }) {
   const userId = await getAuthenticatedUserId();
 
@@ -41,6 +43,8 @@ export async function updateBusinessConfigAction(
     greeting?: string | null;
     notes_for_ai?: string | null;
     working_hours?: Record<string, unknown>;
+    services?: unknown[];
+    faqs?: unknown[]; // business_configs.faqs column
     min_notice_hours?: number;
   }
 ) {

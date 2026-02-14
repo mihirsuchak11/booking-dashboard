@@ -143,6 +143,9 @@ export async function submitOnboardingAction(data: OnboardingData): Promise<{
       name: data.name,
       timezone: data.timezone,
       default_phone_number: data.phone || null,
+      phone: data.phone || null,
+      address: data.address || null,
+      website: data.website || null,
       region: region,
       country_code: region,
       currency: data.currency || regionConfig.currency,
@@ -178,11 +181,18 @@ export async function submitOnboardingAction(data: OnboardingData): Promise<{
 
   const services = data.services || [];
 
+  const faqs = (data.faqs || []).map((f: { id?: string; question: string; answer: string }) => ({
+    id: f.id ?? crypto.randomUUID(),
+    question: f.question,
+    answer: f.answer,
+  }));
+
   const configResult = await updateBusinessConfig(businessId, {
-    working_hours: data.workingHours, // JSONB: just the hours now
-    services: services,               // JSONB
-    booking_settings: bookingSettings,// JSONB
-    business_profile: businessProfile,// JSONB
+    working_hours: data.workingHours,
+    services: services,
+    faqs: faqs, // business_configs.faqs column
+    booking_settings: bookingSettings,
+    business_profile: businessProfile,
     min_notice_hours: data.minNoticeHours || 24,
   });
 
@@ -282,107 +292,63 @@ export async function findBusinessesAction(
       searchQuery = `${name} in ${regionName}`;
     }
 
-    console.log("[Onboarding] Search query:", searchQuery);
-
-    // TODO: Remove DEBUG flag and mock data - restore full API search
-    const DEBUG = true;
-
     let businesses: BusinessSearchResult[];
 
-    if (DEBUG) {
-      // Skip API call - use mock data instead
-      console.log(`[Onboarding] DEBUG mode: Skipping Serper API call`);
-      businesses = [
-        {
-          id: `search_0_${Date.now()}`,
-          name: name,
-          address: location.trim() || `${regionName} Address`,
-          phone: "+1 (555) 123-4567",
-          websiteUrl: `https://www.${name.toLowerCase().replace(/\s+/g, '')}.com`,
-          category: "General Business",
-          rating: 4.5,
-          openingHours: undefined,
-        },
-        {
-          id: `search_1_${Date.now()}`,
-          name: `${name} - Main Location`,
-          address: location.trim() || `123 Main St, ${regionName}`,
-          phone: "+1 (555) 234-5678",
-          websiteUrl: undefined,
-          category: "Business Services",
-          rating: 4.2,
-          openingHours: undefined,
-        },
-        {
-          id: `search_2_${Date.now()}`,
-          name: `${name} Professional Services`,
-          address: location.trim() || `456 Oak Ave, ${regionName}`,
-          phone: undefined,
-          websiteUrl: `https://www.${name.toLowerCase().replace(/\s+/g, '')}pro.com`,
-          category: "Professional Services",
-          rating: 4.7,
-          openingHours: undefined,
-        },
-      ];
-    } else {
-      // TODO: Remove this entire else block when removing DEBUG flag
-      const apiKey = process.env.SERPER_API_KEY;
-      if (!apiKey) {
-        console.error("[Onboarding] Error: SERPER_API_KEY is not defined");
-        return {
-          success: false,
-          businesses: [],
-          searchTerm: name,
-          region,
-          error: "Search service is not configured",
-        };
-      }
-
-      const response = await fetch("https://google.serper.dev/places", {
-        method: "POST",
-        headers: {
-          "X-API-KEY": apiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          q: searchQuery,
-          gl: region.toLowerCase(),
-          ...(location.trim() && { location: location.trim() }),
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[Onboarding] Serper API Error (${response.status}): ${errorText}`);
-
-        return {
-          success: false,
-          businesses: [],
-          searchTerm: name,
-          region,
-          error: response.status === 403
-            ? "Search service permission denied."
-            : "Search service error. Please try again.",
-        };
-      }
-
-      const result = await response.json();
-      console.log("[Onboarding] Serper response:", result);
-
-      // Increased from 3 to 5 results
-      const places = result.places?.slice(0, 5) || [];
-
-      businesses = places.map((place: any, index: number) => ({
-        id: `search_${index}_${Date.now()}`,
-        name: place.title || place.name || "Unknown Business",
-        address: place.address || "",
-        phone: place.phoneNumber || undefined,
-        websiteUrl: place.website || undefined,
-        category: place.category || undefined,
-        rating: place.rating || undefined,
-        openingHours: place.openingHours || undefined,
-      }));
+    const apiKey = process.env.SERPER_API_KEY;
+    if (!apiKey) {
+      console.error("[Onboarding] Error: SERPER_API_KEY is not defined");
+      return {
+        success: false,
+        businesses: [],
+        searchTerm: name,
+        region,
+        error: "Search service is not configured",
+      };
     }
+
+    const response = await fetch("https://google.serper.dev/places", {
+      method: "POST",
+      headers: {
+        "X-API-KEY": apiKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        q: searchQuery,
+        gl: region.toLowerCase(),
+        ...(location.trim() && { location: location.trim() }),
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[Onboarding] Serper API Error (${response.status}): ${errorText}`);
+
+      return {
+        success: false,
+        businesses: [],
+        searchTerm: name,
+        region,
+        error: response.status === 403
+          ? "Search service permission denied."
+          : "Search service error. Please try again.",
+      };
+    }
+
+    const result = await response.json();
+
+    // Increased from 3 to 5 results
+    const places = result.places?.slice(0, 5) || [];
+
+    businesses = places.map((place: any, index: number) => ({
+      id: `search_${index}_${Date.now()}`,
+      name: place.title || place.name || "Unknown Business",
+      address: place.address ?? place.addressLines ?? "",
+      phone: place.phone ?? place.phoneNumber ?? undefined,
+      websiteUrl: place.website ?? place.websiteUrl ?? place.url ?? undefined,
+      category: place.category ?? place.type ?? undefined,
+      rating: place.rating ?? undefined,
+      openingHours: place.openingHours ?? place.hours ?? undefined,
+    }));
 
     return {
       success: true,
