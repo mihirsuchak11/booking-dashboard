@@ -476,25 +476,6 @@ export async function generateBusinessProfile(businessData: {
       console.warn("[Onboarding] Using DEV TEST USER ID for generation");
     }
 
-    let object: {
-      businessInfo: {
-        description: string;
-        email?: string;
-      };
-      services: Array<{
-        name: string;
-        duration: number;
-        price: number;
-        description: string;
-      }>;
-      faqs: Array<{
-        question: string;
-        answer: string;
-        confidence: number;
-        requiresConfirmation: boolean;
-      }>;
-    };
-
     const { openai } = await import("@ai-sdk/openai");
     const { generateObject } = await import("ai");
     const { z } = await import("zod");
@@ -518,7 +499,7 @@ export async function generateBusinessProfile(businessData: {
       })).describe("List of 5-7 essential FAQs for booking/location/pricing")
     });
 
-    const result = await generateObject({
+    const { object } = await generateObject({
       model: openai("gpt-4o"),
       schema: schema,
       prompt: `
@@ -541,7 +522,6 @@ export async function generateBusinessProfile(businessData: {
             If you don't know a specific detail, use a generic placeholder answer like "Please contact us to confirm" or "varies by service".
         `,
     });
-    object = result.object;
 
     // Hardcoded default hours (10 AM - 7 PM, 7 days a week)
     const defaultDay = { isOpen: true, open: "10:00", close: "19:00" };
