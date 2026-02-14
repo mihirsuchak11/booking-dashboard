@@ -476,11 +476,6 @@ export async function generateBusinessProfile(businessData: {
       console.warn("[Onboarding] Using DEV TEST USER ID for generation");
     }
 
-    console.log(`[Onboarding] Generating FULL PROFILE for: ${businessData.name}`);
-
-    // TODO: Remove DEBUG flag and mock data - restore full AI generation
-    const DEBUG = true;
-
     let object: {
       businessInfo: {
         description: string;
@@ -500,79 +495,33 @@ export async function generateBusinessProfile(businessData: {
       }>;
     };
 
-    if (DEBUG) {
-      // Skip AI generation - use default/mock data instead
-      console.log(`[Onboarding] DEBUG mode: Skipping AI generation`);
-      object = {
-        businessInfo: {
-          description: `Welcome to ${businessData.name}. We provide quality services and look forward to serving you.`,
-          email: "",
-        },
-        services: [
-          {
-            name: "Consultation",
-            duration: 30,
-            price: 50,
-            description: "Initial consultation service"
-          },
-          {
-            name: "Standard Service",
-            duration: 60,
-            price: 100,
-            description: "Standard service offering"
-          }
-        ],
-        faqs: [
-          {
-            question: "How do I book an appointment?",
-            answer: "You can book an appointment through our online booking system or by contacting us directly.",
-            confidence: 0.8,
-            requiresConfirmation: false
-          },
-          {
-            question: "What are your operating hours?",
-            answer: "Please contact us to confirm our current operating hours.",
-            confidence: 0.7,
-            requiresConfirmation: true
-          },
-          {
-            question: "Do you accept walk-ins?",
-            answer: "Please contact us to confirm our walk-in policy.",
-            confidence: 0.7,
-            requiresConfirmation: true
-          }
-        ]
-      };
-    } else {
-      // TODO: Remove this entire else block when removing DEBUG flag
-      const { openai } = await import("@ai-sdk/openai");
-      const { generateObject } = await import("ai");
-      const { z } = await import("zod");
+    const { openai } = await import("@ai-sdk/openai");
+    const { generateObject } = await import("ai");
+    const { z } = await import("zod");
 
-      // Unified Schema for the Dashboard
-      const schema = z.object({
-        businessInfo: z.object({
-          description: z.string().describe("Professional business description for the booking page (2-3 sentences)."),
-          email: z.string().optional().describe("Inferred email or empty string."),
-        }),
-        services: z.array(z.object({
-          name: z.string(),
-          duration: z.number().describe("Duration in minutes (estimate)"),
-          price: z.number().describe("Price in USD/Local Currency (estimate)"),
-          description: z.string().describe("Short description of the service")
-        })).describe("List of 3-5 core services offered by this type of business"),
-        faqs: z.array(z.object({
-          question: z.string(),
-          answer: z.string(),
-          confidence: z.number(),
-          requiresConfirmation: z.boolean()
-        })).describe("List of 5-7 essential FAQs for booking/location/pricing")
-      });
+    const schema = z.object({
+      businessInfo: z.object({
+        description: z.string().describe("Professional business description for the booking page (2-3 sentences)."),
+        email: z.string().optional().describe("Inferred email or empty string."),
+      }),
+      services: z.array(z.object({
+        name: z.string(),
+        duration: z.number().describe("Duration in minutes (estimate)"),
+        price: z.number().describe("Price in USD/Local Currency (estimate)"),
+        description: z.string().describe("Short description of the service")
+      })).describe("List of 3-5 core services offered by this type of business"),
+      faqs: z.array(z.object({
+        question: z.string(),
+        answer: z.string(),
+        confidence: z.number(),
+        requiresConfirmation: z.boolean()
+      })).describe("List of 5-7 essential FAQs for booking/location/pricing")
+    });
 
-      const result = await generateObject({
-        model: openai("gpt-4o"),
-        schema: schema,
-        prompt: `
+    const result = await generateObject({
+      model: openai("gpt-4o"),
+      schema: schema,
+      prompt: `
             You are setting up a Booking Agent for a business.
             Generate a full initial profile based on this info:
             
@@ -591,9 +540,8 @@ export async function generateBusinessProfile(businessData: {
             CRITICAL: Do NOT hallucinate specific details like "Free parking at the rear" or "We accept BlueCross insurance" unless you are 100% certain based on the category (e.g. "We accept major credit cards" is usually safe).
             If you don't know a specific detail, use a generic placeholder answer like "Please contact us to confirm" or "varies by service".
         `,
-      });
-      object = result.object;
-    }
+    });
+    object = result.object;
 
     // Hardcoded default hours (10 AM - 7 PM, 7 days a week)
     const defaultDay = { isOpen: true, open: "10:00", close: "19:00" };
