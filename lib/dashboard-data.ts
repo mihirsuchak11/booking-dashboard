@@ -620,7 +620,7 @@ export async function getBusinessWithConfig(
     const [businessResult, configResult] = await Promise.all([
       supabase
         .from("businesses")
-        .select("id, name, timezone, default_phone_number, created_at")
+        .select("id, name, timezone, default_phone_number, region, country_code, currency, locale, date_format, phone, website, address, status, created_at")
         .eq("id", businessId)
         .single(),
       supabase

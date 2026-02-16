@@ -143,6 +143,9 @@ export async function submitOnboardingAction(data: OnboardingData): Promise<{
       name: data.name,
       timezone: data.timezone,
       default_phone_number: data.phone || null,
+      phone: data.phone || null,
+      address: data.address || null,
+      website: data.website || null,
       region: region,
       country_code: region,
       currency: data.currency || regionConfig.currency,
@@ -178,11 +181,18 @@ export async function submitOnboardingAction(data: OnboardingData): Promise<{
 
   const services = data.services || [];
 
+  const faqs = (data.faqs || []).map((f: { id?: string; question: string; answer: string }) => ({
+    id: f.id ?? crypto.randomUUID(),
+    question: f.question,
+    answer: f.answer,
+  }));
+
   const configResult = await updateBusinessConfig(businessId, {
-    working_hours: data.workingHours, // JSONB: just the hours now
-    services: services,               // JSONB
-    booking_settings: bookingSettings,// JSONB
-    business_profile: businessProfile,// JSONB
+    working_hours: data.workingHours,
+    services: services,
+    faqs: faqs, // business_configs.faqs column
+    booking_settings: bookingSettings,
+    business_profile: businessProfile,
     min_notice_hours: data.minNoticeHours || 24,
   });
 
@@ -282,7 +292,7 @@ export async function findBusinessesAction(
       searchQuery = `${name} in ${regionName}`;
     }
 
-    console.log("[Onboarding] Search query:", searchQuery);
+    let businesses: BusinessSearchResult[];
 
     const apiKey = process.env.SERPER_API_KEY;
     if (!apiKey) {
@@ -325,20 +335,19 @@ export async function findBusinessesAction(
     }
 
     const result = await response.json();
-    console.log("[Onboarding] Serper response:", result);
 
     // Increased from 3 to 5 results
     const places = result.places?.slice(0, 5) || [];
 
-    const businesses: BusinessSearchResult[] = places.map((place: any, index: number) => ({
+    businesses = places.map((place: any, index: number) => ({
       id: `search_${index}_${Date.now()}`,
       name: place.title || place.name || "Unknown Business",
-      address: place.address || "",
-      phone: place.phoneNumber || undefined,
-      websiteUrl: place.website || undefined,
-      category: place.category || undefined,
-      rating: place.rating || undefined,
-      openingHours: place.openingHours || undefined,
+      address: place.address ?? place.addressLines ?? "",
+      phone: place.phone ?? place.phoneNumber ?? undefined,
+      websiteUrl: place.website ?? place.websiteUrl ?? place.url ?? undefined,
+      category: place.category ?? place.type ?? undefined,
+      rating: place.rating ?? undefined,
+      openingHours: place.openingHours ?? place.hours ?? undefined,
     }));
 
     return {
@@ -467,13 +476,10 @@ export async function generateBusinessProfile(businessData: {
       console.warn("[Onboarding] Using DEV TEST USER ID for generation");
     }
 
-    console.log(`[Onboarding] Generating FULL PROFILE for: ${businessData.name}`);
-
     const { openai } = await import("@ai-sdk/openai");
     const { generateObject } = await import("ai");
     const { z } = await import("zod");
 
-    // Unified Schema for the Dashboard
     const schema = z.object({
       businessInfo: z.object({
         description: z.string().describe("Professional business description for the booking page (2-3 sentences)."),

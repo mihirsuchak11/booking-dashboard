@@ -51,11 +51,17 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
   const region: RegionCode = (business?.region as RegionCode) || "US";
   const currencySymbol = getCurrencySymbol(region);
 
-  // Parse services from config or use empty array
-  const initialServices: Service[] =
-    config?.working_hours?.services && Array.isArray(config.working_hours.services)
-      ? config.working_hours.services
+  // Parse services from business_configs.services column first, then working_hours fallback
+  const fromColumn =
+    config?.services != null && Array.isArray(config.services)
+      ? (config.services as Service[])
       : [];
+  const fromWorkingHours =
+    config?.working_hours?.services && Array.isArray(config.working_hours.services)
+      ? (config.working_hours.services as Service[])
+      : [];
+  const initialServices: Service[] =
+    fromColumn.length > 0 ? fromColumn : fromWorkingHours;
 
   const [services, setServices] = useState<Service[]>(initialServices);
   const [isAdding, setIsAdding] = useState(false);
@@ -133,14 +139,9 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
     setError(null);
 
     try {
-      // Get existing working_hours and merge with services
-      const existingWorkingHours = config?.working_hours || {};
-      
+      // Save to business_configs.services column (DB sync)
       const result = await updateBusinessConfigAction(businessId, {
-        working_hours: {
-          ...existingWorkingHours,
-          services: services,
-        },
+        services: services,
       });
 
       if (!result.success) {

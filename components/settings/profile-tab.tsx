@@ -51,11 +51,15 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
   const [timezone, setTimezone] = useState(business.timezone);
   const [phone, setPhone] = useState(business.default_phone_number || "");
 
-  // Form state - Extended fields from config
+  // Form state - Extended fields (DB: business; fallback: config)
   const [description, setDescription] = useState(businessProfile.description || "");
   const [email, setEmail] = useState(businessProfile.email || "");
-  const [website, setWebsite] = useState(businessProfile.website || "");
-  const [address, setAddress] = useState(businessProfile.address || "");
+  const [website, setWebsite] = useState(
+    business.website ?? businessProfile.website ?? ""
+  );
+  const [address, setAddress] = useState(
+    business.address ?? businessProfile.address ?? ""
+  );
 
   // Form state - AI settings
   const [greeting, setGreeting] = useState(config?.greeting || "");
@@ -66,11 +70,13 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
     setError(null);
 
     try {
-      // Update business table
+      // Update business table (including website & address for DB sync)
       const businessResult = await updateBusinessAction({
         name,
         timezone,
         default_phone_number: phone || null,
+        website: website || null,
+        address: address || null,
       });
 
       if (!businessResult.success) {
