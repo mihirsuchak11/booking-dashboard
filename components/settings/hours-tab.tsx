@@ -9,10 +9,13 @@ import { BusinessConfig } from "@/types/database";
 import { updateBusinessConfigAction } from "@/app/settings/actions";
 import { Loader2, Save, Clock, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { SettingsFormHeader } from "./settings-form-header";
 
 interface HoursTabProps {
   businessId: string;
   config: BusinessConfig | null;
+  title?: string;
+  description?: string;
 }
 
 interface DayHours {
@@ -77,7 +80,7 @@ const ADVANCE_BOOKING_OPTIONS = [
   { value: 90, label: "3 months" },
 ];
 
-export function HoursTab({ businessId, config }: HoursTabProps) {
+export function HoursTab({ businessId, config, title = "Hours", description = "When you're available for bookings" }: HoursTabProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -153,6 +156,22 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
 
   return (
     <div className="space-y-6">
+      <SettingsFormHeader title={title} description={description}>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </Button>
+      </SettingsFormHeader>
+
       <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">Operating Hours</h2>
         <p className="text-sm text-muted-foreground mb-6">
@@ -281,22 +300,6 @@ export function HoursTab({ businessId, config }: HoursTabProps) {
           {error}
         </div>
       )}
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              Save Changes
-            </>
-          )}
-        </Button>
-      </div>
     </div>
   );
 }

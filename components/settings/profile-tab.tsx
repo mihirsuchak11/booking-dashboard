@@ -11,11 +11,14 @@ import {
 } from "@/app/settings/actions";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
+import { SettingsFormHeader } from "./settings-form-header";
 
 interface ProfileTabProps {
   businessId: string;
   business: Business;
   config: BusinessConfig | null;
+  title?: string;
+  description?: string;
 }
 
 const TIMEZONES = [
@@ -38,7 +41,7 @@ const TIMEZONES = [
   "UTC",
 ];
 
-export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
+export function ProfileTab({ businessId, business, config, title = "Profile", description = "Your business name, contact details and timezone" }: ProfileTabProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +55,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
   const [phone, setPhone] = useState(business.default_phone_number || "");
 
   // Form state - Extended fields (DB: business; fallback: config)
-  const [description, setDescription] = useState(businessProfile.description || "");
+  const [businessDescription, setBusinessDescription] = useState(businessProfile.description || "");
   const [email, setEmail] = useState(businessProfile.email || "");
   const [website, setWebsite] = useState(
     business.website ?? businessProfile.website ?? ""
@@ -93,7 +96,7 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
         working_hours: {
           ...existingWorkingHours,
           businessProfile: {
-            description,
+            description: businessDescription,
             email,
             website,
             address,
@@ -124,6 +127,25 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
 
   return (
     <div className="space-y-6">
+      <SettingsFormHeader
+        title={title}
+        description={description}
+      >
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </Button>
+      </SettingsFormHeader>
+
       <div className="rounded-3xl border bg-card p-6">
         <h2 className="text-lg font-semibold mb-4">Business Information</h2>
 
@@ -140,8 +162,8 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           <div className="grid gap-2">
             <label className="text-sm font-medium text-muted-foreground">Description</label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={businessDescription}
+              onChange={(e) => setBusinessDescription(e.target.value)}
               placeholder="Brief description of your business..."
               className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
@@ -244,22 +266,6 @@ export function ProfileTab({ businessId, business, config }: ProfileTabProps) {
           {error}
         </div>
       )}
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              Save Changes
-            </>
-          )}
-        </Button>
-      </div>
     </div>
   );
 }

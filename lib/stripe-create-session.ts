@@ -96,7 +96,7 @@ export async function createSessionForUser(
     },
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${APP_URL}/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${APP_URL}/stripe/cancel`,
+    cancel_url: `${APP_URL}/stripe/cancel?plan=${encodeURIComponent(planKey)}`,
   });
 
   return {

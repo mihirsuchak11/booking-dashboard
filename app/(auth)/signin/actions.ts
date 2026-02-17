@@ -10,6 +10,7 @@ import {
 import { createSessionForUser } from "@/lib/stripe-create-session";
 import { isPlanKey } from "@/config/stripe-plans";
 import { getBusinessIdForUser } from "@/lib/business-auth";
+import { getBusinessById } from "@/lib/dashboard-data";
 
 export interface SignInState {
   error?: string;
@@ -91,6 +92,10 @@ export async function signInAction(
 
   const businessId = await getBusinessIdForUser(data.user.id);
   if (businessId) {
+    const business = await getBusinessById(businessId);
+    if (business?.status === "onboarding") {
+      redirect("/onboarding");
+    }
     redirect("/dashboard");
   }
   redirect("/onboarding");

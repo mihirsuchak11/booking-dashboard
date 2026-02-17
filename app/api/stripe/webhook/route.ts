@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { supabase } from "@/lib/supabase-server";
 import { getBusinessIdForUser } from "@/lib/business-auth";
 import { getPlanKeyFromPriceId } from "@/config/stripe-plans";
+import { createBusiness } from "@/lib/dashboard-data";
 
 const stripeSecret = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -67,15 +68,47 @@ export async function POST(request: NextRequest) {
           break;
         }
         const status = mapStripeStatus(subscription.status);
+        
+        // Resolve business_id: Database is source of truth. If none exists (payment-first flow), create one.
+        let businessId = await getBusinessIdForUser(userId);
+        
+        if (!businessId) {
+          // Payment completed before onboarding: create a placeholder business so subscription can link to it
+          // Status "onboarding" ensures user is redirected to onboarding to complete setup
+          const createResult = await createBusiness(userId, {
+            name: "My Business",
+            timezone: "UTC",
+            status: "onboarding",
+          });
+          if (createResult.success && createResult.businessId) {
+            businessId = createResult.businessId;
+            console.log(`[STRIPE_FLOW] Created business for payment-first user ${userId}: ${businessId}`);
+          } else {
+            console.warn(`[STRIPE_FLOW] Failed to create business for user ${userId}:`, createResult.error);
+          }
+        }
+        
+        const metadataBusinessId = session.metadata?.business_id as string | undefined;
+        if (metadataBusinessId && metadataBusinessId !== businessId) {
+          console.warn(`[STRIPE_FLOW] Metadata mismatch. Metadata: ${metadataBusinessId}, DB: ${businessId || "null"}`);
+        }
+        // current_period_end is on each SubscriptionItem, not on Subscription (Stripe API)
+        const firstItem = subscription.items.data[0];
+        const periodEnd = firstItem?.current_period_end;
+        const currentPeriodEnd = periodEnd
+          ? new Date(periodEnd * 1000).toISOString()
+          : null;
+
         const { error: upsertError } = await supabase.from("subscriptions").upsert(
           {
             user_id: userId,
-            business_id: null,
+            business_id: businessId,
             plan_key: planKey,
             status,
             stripe_customer_id: customerId ?? null,
             stripe_subscription_id: subscriptionId,
             stripe_price_id: priceId,
+            current_period_end: currentPeriodEnd,
             updated_at: new Date().toISOString(),
           },
           { onConflict: "user_id" }
@@ -130,9 +163,17 @@ export async function POST(request: NextRequest) {
           break;
         }
 
+        // current_period_end is on each SubscriptionItem (Stripe API)
+        const firstItem = subscription.items?.data?.[0];
+        const periodEnd = firstItem?.current_period_end;
+        const currentPeriodEnd = periodEnd
+          ? new Date(periodEnd * 1000).toISOString()
+          : null;
+
         const updates: Record<string, unknown> = {
           status,
           stripe_price_id: priceId ?? null,
+          current_period_end: currentPeriodEnd,
           updated_at: new Date().toISOString(),
         };
         if (planKey) updates.plan_key = planKey;

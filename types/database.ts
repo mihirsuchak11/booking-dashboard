@@ -136,6 +136,41 @@ export interface BusinessStats {
 }
 
 /**
+ * Subscription/billing record (subscriptions table).
+ * plan_key is source of truth; Stripe fields are metadata.
+ */
+export type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled";
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  business_id: string | null;
+  plan_key: string;
+  status: SubscriptionStatus;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  stripe_price_id: string | null;
+  /** Next billing/renewal date (Stripe current_period_end). Null for free plan. */
+  current_period_end: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Invoice summary for Payment history (from Stripe).
+ */
+export interface Invoice {
+  id: string;
+  number: string | null;
+  datePaid: string; // ISO
+  amount: number; // in cents
+  currency: string;
+  status: string;
+  hostedInvoiceUrl: string | null;
+  invoicePdfUrl: string | null;
+}
+
+/**
  * User profile data stored in our custom `users` table.
  * Synced automatically from auth.users via database trigger.
  */

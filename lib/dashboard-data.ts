@@ -6,6 +6,7 @@ import {
   Business,
   Booking,
   BusinessConfig,
+  Subscription,
 } from "../types/database";
 
 export type BookingStatus = "upcoming" | "in_progress" | "completed";
@@ -72,7 +73,7 @@ export async function getBusinessById(
   try {
     const { data, error } = await supabase
       .from("businesses")
-      .select("id, name, timezone, default_phone_number, created_at")
+      .select("id, name, timezone, default_phone_number, created_at, status")
       .eq("id", businessId)
       .maybeSingle();
 
@@ -87,6 +88,35 @@ export async function getBusinessById(
     return data as Business;
   } catch (error) {
     console.error("[Dashboard] Error in getBusinessById:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetches the subscription for a user from the database (subscriptions table).
+ * Returns null if no row exists (e.g. user never had a plan set).
+ */
+export async function getSubscriptionByUserId(
+  userId: string
+): Promise<Subscription | null> {
+  try {
+    const { data, error } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error(
+        `[Dashboard] Failed to fetch subscription for user ${userId}:`,
+        error.message
+      );
+      return null;
+    }
+
+    return data as Subscription | null;
+  } catch (error) {
+    console.error("[Dashboard] Error in getSubscriptionByUserId:", error);
     return null;
   }
 }
