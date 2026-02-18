@@ -9,6 +9,7 @@ import {
 } from "@/lib/dashboard-data";
 import { revalidatePath } from "next/cache";
 import { RegionCode, REGIONS } from "@/types/database";
+import { sendWelcomeEmail } from "@/lib/email";
 
 interface ServiceData {
   id: string;
@@ -202,6 +203,23 @@ export async function submitOnboardingAction(data: OnboardingData): Promise<{
   if (data.faqs && data.faqs.length > 0) {
     console.log(`[Onboarding] Automating knowledge base save for ${data.faqs.length} FAQs`);
     await saveKnowledgeBase(data.faqs);
+  }
+
+  // Send welcome email after successful onboarding
+  try {
+    const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const result = await sendWelcomeEmail({
+      userId,
+      userName: data.name,
+      dashboardUrl,
+    });
+    if (!result.success) {
+      console.warn(`[Onboarding] Failed to send welcome email: ${result.error}`);
+      // Don't fail onboarding if email fails
+    }
+  } catch (error) {
+    console.error("[Onboarding] Error sending welcome email:", error);
+    // Don't fail onboarding if email fails
   }
 
   return { success: true };
