@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
 
-      const billingUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://app.bookingagent.ai"}/settings?tab=subscription`;
+      const billingUrl = `${process.env.NEXT_PUBLIC_APP_URL}/settings?tab=subscription`;
 
       // Check if email was already sent (idempotence)
       const checkEmailLog = async (emailType: string, uniqueKey: string) => {

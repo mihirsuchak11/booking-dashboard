@@ -18,7 +18,7 @@ interface BaseEmailLayoutProps {
 
 export function BaseEmailLayout({ preview, children }: BaseEmailLayoutProps) {
   const appName = "AI Booking Agent";
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.bookingagent.ai";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   return (
     <Html>

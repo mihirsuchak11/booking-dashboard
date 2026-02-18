@@ -19,7 +19,7 @@ export function Nudge1dEmail({
   renewalDate,
   billingUrl,
 }: Nudge1dEmailProps) {
-  const url = billingUrl || `${process.env.NEXT_PUBLIC_APP_URL || "https://app.bookingagent.ai"}/settings?tab=subscription`;
+  const url = billingUrl || `${process.env.NEXT_PUBLIC_APP_URL}/settings?tab=subscription`;
 
   return (
     <BaseEmailLayout preview="Your plan renews tomorrow">
