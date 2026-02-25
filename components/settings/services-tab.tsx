@@ -16,11 +16,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatCurrency, getCurrencySymbol } from "@/lib/region-utils";
+import { SettingsFormHeader } from "./settings-form-header";
 
 interface ServicesTabProps {
   businessId: string;
   config: BusinessConfig | null;
   business?: Business | null;
+  title?: string;
+  description?: string;
 }
 
 interface Service {
@@ -42,7 +45,7 @@ const DURATION_OPTIONS = [
   { value: "240", label: "4 hours" },
 ];
 
-export function ServicesTab({ businessId, config, business }: ServicesTabProps) {
+export function ServicesTab({ businessId, config, business, title = "Services", description = "Manage what you offer to customers" }: ServicesTabProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -167,6 +170,22 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
 
   return (
     <div className="space-y-6">
+      <SettingsFormHeader title={title} description={description}>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </Button>
+      </SettingsFormHeader>
+
       <div className="rounded-3xl border bg-card p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -347,22 +366,6 @@ export function ServicesTab({ businessId, config, business }: ServicesTabProps) 
           {error}
         </div>
       )}
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              Save Changes
-            </>
-          )}
-        </Button>
-      </div>
     </div>
   );
 }

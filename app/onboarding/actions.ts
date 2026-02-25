@@ -9,6 +9,7 @@ import {
 } from "@/lib/dashboard-data";
 import { revalidatePath } from "next/cache";
 import { RegionCode, REGIONS } from "@/types/database";
+import { sendWelcomeEmail } from "@/lib/email";
 
 interface ServiceData {
   id: string;
@@ -204,6 +205,23 @@ export async function submitOnboardingAction(data: OnboardingData): Promise<{
     await saveKnowledgeBase(data.faqs);
   }
 
+  // Send welcome email after successful onboarding
+  try {
+    const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const result = await sendWelcomeEmail({
+      userId,
+      userName: data.name,
+      dashboardUrl,
+    });
+    if (!result.success) {
+      console.warn(`[Onboarding] Failed to send welcome email: ${result.error}`);
+      // Don't fail onboarding if email fails
+    }
+  } catch (error) {
+    console.error("[Onboarding] Error sending welcome email:", error);
+    // Don't fail onboarding if email fails
+  }
+
   return { success: true };
 }
 
@@ -272,6 +290,36 @@ export async function findBusinessesAction(
         success: false,
         businesses: [],
         error: "Please enter your business name.",
+      };
+    }
+
+    // TODO: DEBUG CODE - NEED TO REMOVE
+    const DEBUG = process.env.DEBUG === "true";
+    if (DEBUG) {
+      const sampleBusinesses: BusinessSearchResult[] = [
+        {
+          id: `search_0_${Date.now()}`,
+          name: name.trim() || "Sample Business",
+          address: "123 Main St, Sample City",
+          phone: "+1 555-0100",
+          websiteUrl: "https://example.com",
+          category: "General Business",
+          rating: 4.5,
+        },
+        {
+          id: `search_1_${Date.now()}`,
+          name: `${name.trim() || "Sample"} - Second Location`,
+          address: "456 Oak Ave, Sample City",
+          phone: "+1 555-0101",
+          websiteUrl: "https://example.com",
+          category: "General Business",
+        },
+      ];
+      return {
+        success: true,
+        businesses: sampleBusinesses,
+        searchTerm: name,
+        region,
       };
     }
 
@@ -471,6 +519,44 @@ export async function generateBusinessProfile(businessData: {
   error?: string;
 }> {
   try {
+    // TODO: DEBUG CODE - NEED TO REMOVE
+    const DEBUG = process.env.DEBUG === "true";
+    if (DEBUG) {
+      const defaultDay = { isOpen: true, open: "10:00", close: "19:00" };
+      return {
+        success: true,
+        data: {
+          businessInfo: {
+            description: "Sample business description for testing. Update this in settings after onboarding.",
+            name: businessData.name,
+            category: businessData.category,
+            address: businessData.address,
+            phone: businessData.phone,
+            website: businessData.website,
+          },
+          hours: {
+            monday: defaultDay,
+            tuesday: defaultDay,
+            wednesday: defaultDay,
+            thursday: defaultDay,
+            friday: defaultDay,
+            saturday: defaultDay,
+            sunday: defaultDay,
+          },
+          services: [
+            { name: "Consultation", duration: 30, price: 50, description: "Initial consultation" },
+            { name: "Standard Service", duration: 60, price: 100, description: "Standard service session" },
+            { name: "Premium Service", duration: 90, price: 150, description: "Extended premium session" },
+          ],
+          faqs: [
+            { id: "gen_0", question: "What are your opening hours?", answer: "Please contact us to confirm.", source: "ai_generated", confidence: 0.8, requiresConfirmation: true },
+            { id: "gen_1", question: "Do you accept walk-ins?", answer: "We recommend booking in advance.", source: "ai_generated", confidence: 0.9, requiresConfirmation: false },
+            { id: "gen_2", question: "What payment methods do you accept?", answer: "We accept major credit cards and local payment options.", source: "ai_generated", confidence: 0.85, requiresConfirmation: false },
+          ],
+        },
+      };
+    }
+
     const userId = await getAuthenticatedUserId();
     if (!userId) {
       console.warn("[Onboarding] Using DEV TEST USER ID for generation");

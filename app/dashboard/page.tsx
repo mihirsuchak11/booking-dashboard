@@ -33,11 +33,13 @@ export default async function DashboardPage({
   const businessId = await getBusinessIdForUser(userId);
 
   if (!businessId) {
-    // In the future we can redirect to onboarding; for now go back to sign-in.
-    redirect("/signin");
+    redirect("/onboarding");
   }
 
   const business = await getBusinessById(businessId);
+  if (business?.status === "onboarding") {
+    redirect("/onboarding");
+  }
 
   return (
     <SidebarProvider className="bg-sidebar">

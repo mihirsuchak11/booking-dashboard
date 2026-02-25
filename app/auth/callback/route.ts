@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase-ssr";
 import { setAuthenticatedUserId } from "@/lib/auth-session";
 import { getBusinessIdForUser } from "@/lib/business-auth";
+import { getBusinessById } from "@/lib/dashboard-data";
 import { createSessionForUser } from "@/lib/stripe-create-session";
 import { isPlanKey } from "@/config/stripe-plans";
 
@@ -66,6 +67,10 @@ export async function GET(request: NextRequest) {
 
         const businessId = await getBusinessIdForUser(data.user.id);
         if (businessId) {
+            const business = await getBusinessById(businessId);
+            if (business?.status === "onboarding") {
+                return NextResponse.redirect(new URL("/onboarding", request.url));
+            }
             return NextResponse.redirect(new URL("/dashboard", request.url));
         }
         return NextResponse.redirect(new URL("/onboarding", request.url));

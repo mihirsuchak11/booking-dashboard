@@ -9,10 +9,13 @@ import { updateBusinessConfigAction } from "@/app/settings/actions";
 import { Plus, Trash2, MessageCircle, Loader2, Save, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { SettingsFormHeader } from "./settings-form-header";
 
 interface FAQsTabProps {
   businessId: string;
   config: BusinessConfig | null;
+  title?: string;
+  description?: string;
 }
 
 interface FAQ {
@@ -21,7 +24,7 @@ interface FAQ {
   answer: string;
 }
 
-export function FAQsTab({ businessId, config }: FAQsTabProps) {
+export function FAQsTab({ businessId, config, title = "FAQs", description = "Answers to common questions" }: FAQsTabProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +105,22 @@ export function FAQsTab({ businessId, config }: FAQsTabProps) {
 
   return (
     <div className="space-y-6">
+      <SettingsFormHeader title={title} description={description}>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </Button>
+      </SettingsFormHeader>
+
       <div className="rounded-3xl border bg-card p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -227,22 +246,6 @@ export function FAQsTab({ businessId, config }: FAQsTabProps) {
           {error}
         </div>
       )}
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              Save Changes
-            </>
-          )}
-        </Button>
-      </div>
     </div>
   );
 }
