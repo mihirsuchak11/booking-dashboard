@@ -4,7 +4,7 @@ import { isPlanKey } from "@/config/stripe-plans";
 
 const STRIPE_PLAN_COOKIE = "stripe_plan";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname !== "/signin") {
     return NextResponse.next();
   }
